@@ -1,0 +1,15 @@
+env
+*.rdb
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.swp
+*.swo
+coverage/
+node_modules/
+benchmarks/graphs
+.DS_Store
+Thumbs.db
