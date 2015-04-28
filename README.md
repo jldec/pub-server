@@ -35,6 +35,7 @@ Windows support is coming - PRs welcome.
 ### editor with instant preview
 
 **pub-editor** was designed for self-service editing online.
+
 You can also use it to edit your markdown when pub is running locally.
 
 - click on `Edit` at the top right 
@@ -45,6 +46,13 @@ You can also use it to edit your markdown when pub is running locally.
 - use git to validate the changes before committing
 
 ![editor screen-shot](screen3.png)
+
+
+### packages and themes
+
+- **pub-server** can be extended with npm packages containing plugins and themes
+- the default theme for pub-server is [pub-theme-gfm](https://github.com/jldec/pub-theme-gfm)
+- the editor is [pub-pkg-editor](https://github.com/jldec/pub-pkg-editor)
 
 
 ### credits
