@@ -32,7 +32,7 @@ function pubServer(opts) {
 
   var server = this;
 
-  server.opts = opts = require('pub-resolve-opts')(opts, __dirname);
+  server.opts = opts = require('pub-resolve-opts')(opts, path.join(__dirname, '..'));
 
   opts.production  = opts.production || (process.env.NODE_ENV === 'production');
   opts.port        = opts.port       || process.env.PORT || '3001';

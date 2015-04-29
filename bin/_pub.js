@@ -58,7 +58,7 @@ if (!cli.sockets)                  { opts['no-sockets'] = true; }
 if (cli.editor)                    { opts.editor = true; }
 if (cli.dbg)                       { opts.dbg = process.env.DEBUG || '*'; opts['no-timeouts'] = true; }
 
-var server = require('../server')(opts);
+var server = require('../server/server')(opts);
 
 if (cli.config) return console.log(u.inspect(u.omit(opts, 'source$'), {depth:2, colors:true}));
 

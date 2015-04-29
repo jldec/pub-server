@@ -9,9 +9,9 @@ Start by using **pub** to preview your github README or other markdown files. Si
 - find all the markdown files there
 - render them in your browser at http://localhost:3001/
 - watch the files for changes
-- and automatically reload your browser whenever you save a change in your editor
+- automatically refresh your browser when you save a change from your favorite editor
 
-![preview screen-shot](screen1.png)
+![preview screen-shot](/images/screen1.png)
 
 Later you may want to use **pub** for documentation, a blog, or a website with a theme of your choice.
 
@@ -29,7 +29,7 @@ Windows support is coming - PRs welcome.
 
 ### usage
 
-![command-line screen-shot](screen2.png)
+![command-line screen-shot](/images/screen2.png)
 
 
 ### editor with instant preview
@@ -45,7 +45,7 @@ You can also use it to edit your markdown when pub is running locally.
 - **NOTE: your changes will be saved immediately, overwriting the file**
 - use git to validate the changes before committing
 
-![editor screen-shot](screen3.png)
+![editor screen-shot](/images/screen3.png)
 
 
 ### packages and themes

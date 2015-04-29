@@ -35,7 +35,7 @@ test("routes, overwrites, and single-file paths", function(done) {
 
   server.app = { use: noop, get: noop };
 
-  var statics = require('../serve-statics')(server);
+  var statics = require('../server/serve-statics')(server);
 
   var expected =
   [ '/extra/file5.txt',

@@ -39,16 +39,17 @@ module.exports = function serveScripts(server) {
   });
 
   // browser client for pub-server notifications
-  app.get('/server/pub-ux.js', browserify(__dirname + '/client/pub-ux.js'));
+  app.get('/server/pub-ux.js', 
+    browserify(fspath.join(__dirname, '../client/pub-ux.js')));
 
   // editor api
   if (opts.editor) {
 
     app.get('/pub/_generator.js',
-      browserify(__dirname + '/_generator.js'));
+      browserify(fspath.join(__dirname, '../client/_generator.js')));
 
     app.get('/pub/_generator-plugins.js',
-      browserify(__dirname + '/_generator-plugins.js',
+      browserify(fspath.join(__dirname, '../client/_generator-plugins.js'),
                 { transform: [transformPlugins] } ));
 
     app.get('/pub/_opts.json', function(req, res) {
