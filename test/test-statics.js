@@ -50,8 +50,8 @@ test("routes, overwrites, and single-file paths", function(done) {
 
   var expectedLogText =
     'overwriting duplicate static /dir3/file4.txt\n' +
-    '  old path: /Users/hello/pub/server/test/static2\n' +
-    '  new path: /Users/hello/pub/server/test/static1\n';
+    '  old path: ' + __dirname + '/static2\n' +
+    '  new path: ' + __dirname + '/static1\n';
 
   server.on('static-scan', function() {
     var actual = u.keys(statics.file$);
