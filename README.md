@@ -4,7 +4,7 @@
 
 **pub** generates html from markdown files.
 
-Start by using **pub** to preview your github README or other markdown files. Simply run `pub` from the command line in your project folder. It will
+Start by using **pub** to preview your github README or other markdown files. Simply run `pub` from the command line in your project folder. It will:
 
 - find all the markdown files there
 - render them in your browser at http://localhost:3001/
@@ -38,7 +38,7 @@ Windows support is coming - PRs welcome.
 
 You can also use it to edit your markdown when pub is running locally.
 
-- click on `Edit` at the top right 
+- click on `Edit` at the top right
 - this prepends `/pub` to the url which opens the page in the editor
 - adjust the split between the panes by dragging the separator at the top
 - edit the markdown on the left, and see the result instantly in the preview on the right

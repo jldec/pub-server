@@ -49,7 +49,7 @@ test("routes, overwrites, and single-file paths", function(done) {
     '/dir2/file3.txt' ];
 
   var expectedLogText =
-    'overwriting duplicate static /dir3/file4.txt\n' +
+    'duplicate static /dir3/file4.txt\n' +
     '  old path: ' + __dirname + '/static2\n' +
     '  new path: ' + __dirname + '/static1\n';
 

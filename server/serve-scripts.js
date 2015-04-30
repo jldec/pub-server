@@ -39,7 +39,7 @@ module.exports = function serveScripts(server) {
   });
 
   // browser client for pub-server notifications
-  app.get('/server/pub-ux.js', 
+  app.get('/server/pub-ux.js',
     browserify(fspath.join(__dirname, '../client/pub-ux.js')));
 
   // editor api

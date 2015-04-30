@@ -106,7 +106,7 @@ module.exports = function serveStatics(server) {
       u.each(sp.files, function(file) {
         var reqPath = path.join(sp.route, file);
         if (file$[reqPath] && self.scanCnt >= staticPathsRev.length) {
-          log('overwriting duplicate static %s\n  old path: %s\n  new path: %s', reqPath,
+          log('duplicate static %s\n  old path: %s\n  new path: %s', reqPath,
               file$[reqPath].path,
               sp.path);
         }
