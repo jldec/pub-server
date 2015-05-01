@@ -1,6 +1,6 @@
 {
   "name": "pub-server",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "markdown site generator, web server, and editor",
   "main": "./server/server.js",
   "preferGlobal": true,
@@ -29,7 +29,8 @@
     "express-session": "^1.11.1",
     "send": "^0.12.2",
     "through2": "^0.6.5",
-    "socket.io": "^1.3.5"
+    "socket.io": "^1.3.5",
+    "fs-extra": "^0.18.2"
   },
   "scripts": {
     "test": "mocha --ui qunit"

@@ -53,14 +53,14 @@ if (cli.static.length)             { opts.staticPaths = cli.static; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
 if (cli.outputOnly)                { opts.outputOnly = cli.outputOnly; }
-if (!cli.watch  || cli.outputOnly) { opts['no-watch'] = true; }
+if (!cli.watch || cli.outputOnly)  { opts['no-watch'] = true; }
 if (!cli.sockets)                  { opts['no-sockets'] = true; }
 if (cli.editor)                    { opts.editor = true; }
 if (cli.dbg)                       { opts.dbg = process.env.DEBUG || '*'; opts['no-timeouts'] = true; }
 
 var server = require('../server/server')(opts);
 
-if (cli.config) return console.log(u.inspect(u.omit(opts, 'source$'), {depth:2, colors:true}));
+if (cli.config) return console.log(u.inspect(u.omit(opts, 'source$', 'output$'), {depth:2, colors:true}));
 
 server.run();
 

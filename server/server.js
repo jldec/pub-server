@@ -63,6 +63,7 @@ function pubServer(opts) {
 
       if (opts.outputOnly) {
         generator.outputPages();
+        require('./serve-statics')(opts); // copy statics
         generator.unload();
         return;
       }
@@ -100,7 +101,7 @@ function pubServer(opts) {
 
     require('./serve-pages')(server);
     require('./serve-scripts')(server);
-    require('./serve-statics')(server);
+    server.statics = require('./serve-statics')(opts, server);
 
     server.emit('init-app-last');
 
