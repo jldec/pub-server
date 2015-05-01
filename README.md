@@ -4,16 +4,19 @@
 
 **pub** generates html from markdown files.
 
-Start by using **pub** to preview your github README or other markdown files. Simply run `pub` from the command line in your project folder. It will:
+Start by using **pub** to preview your github README or other markdown files.
+Later you may want to use **pub** for a [presentation](https://github.com/jldec/pub-theme-shower-ribbon)
+or website with a theme of your choice.
+
+Running `pub` from the command line in your project folder will:
 
 - find all the markdown files there
 - render them in your browser at http://localhost:3001/
 - watch the files for changes
 - automatically refresh your browser when you save a change from your favorite editor
+- use `pub -O` to generate html files without starting a server
 
 ![preview screen-shot](/images/screen1.png)
-
-Later you may want to use **pub** for documentation, a blog, or a website with a theme of your choice.
 
 
 ### installation
@@ -28,6 +31,9 @@ Windows support is coming - PRs welcome.
 
 
 ### usage
+
+`pub -h` will display a list of the available command line options.
+You can use a `pub-config.js` or `pub-config.json` file.
 
 ![command-line screen-shot](/images/screen2.png)
 
