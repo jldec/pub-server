@@ -39,10 +39,35 @@ module.exports = function serveStatics(opts, server) {
   self.scanCnt = 0; // how many scans have been completed
   self.defaultFile = ''; // default file to serve if no other pages available
 
+  // global opts
+
+  // server retry with extensions when requested file not found - array
+  self.extensions = 'extensions' in opts ? opts.extensions : ['.htm', '.html'];
+
+  // server retry with trailing slash (similar to extensions) - bool
+  self.trailingSlash = 'trailingSlash' in opts ? opts.trailingSlash : true;
+
+  // additionally serve 'path/{name}' as just 'path' (1st match wins) - array
+  // [inverse of generator.output() for pages with _href = directory]
+  self.indexFiles = 'indexFiles' in opts ? opts.indexFiles : ['index.html'];
+
+  if (self.indexFiles && self.indexFiles.length) {
+    self.indexFilesRe = new RegExp(
+      u.map(self.indexFiles, function(name) {
+        return u.escapeRegExp('/' + name) + '$';
+      }).join('|'));
+  }
+  else self.indexFiles = false; // allow use as boolean, false if empty
+
   // perform initial scan
   scanAll(function() {
     if (!server) {
       outputAll();
+    }
+    else {
+      server.emit('static-scan');
+      if (!server.generator.home) log('serving %s static files (%s %s %s)',
+        u.size(self.file$), self.extensions, self.trailingSlash ? '../' : '', self.indexFiles);
     }
   });
 
@@ -82,56 +107,56 @@ module.exports = function serveStatics(opts, server) {
 
     var src = sp.src;
 
-    // only construct src and sendOpts once
+    // only construct src, defaults, sendOpts etc. once
     if (!src) {
-      sp.depth = sp.depth || 3; // default to depth:3
+      sp.depth = sp.depth || 3; // default depth:3, 10min
+      sp.maxAge = 'maxAge' in sp ? sp.maxAge : '10m';
       src = sp.src = fsbase(sp);
       sp.sendOpts = u.merge(
         u.pick(sp, 'maxAge', 'lastModified', 'etag'),
         { dotfiles:'ignore',
-          index:false,
-          redirect:false,
-          root:src.isfile() ? path.dirname(src.path) : src.path } );
+          index:false,      // handled at this level
+          extensions:false, // ditto
+          root:src.path } );
     }
 
     src.listfiles(function(err, files) {
       if (err) return cb(log(err));
       sp.files = files;
       self.scanCnt++;
-      indexFiles();
+      mapAllFiles();
       debug('static scan %s-deep %sms %s', sp.depth, timer(), sp.path.replace(/.*\/node_modules\//g, ''));
       cb();
     });
   }
 
-  function indexFiles() {
+  // recompute self.file$ hash of reqPath -> {sp, file}
+  function mapAllFiles() {
     var file$ = {};
-    var cnt = 0;
-    var dfile = '';
+    var indexFileSlash = self.trailingSlash ? '/' : '';
 
     // use reverse list so that first statics in config win e.g. over themes
     u.each(staticPathsRev, function(sp) {
-
-      // do nothing for staticPaths which don't have .files
-      if (!sp.files) return;
-
-      cnt++;
       u.each(sp.files, function(file) {
-        var reqPath = path.join(sp.route, file);
-        if (file$[reqPath] && self.scanCnt >= staticPathsRev.length) {
-          log('duplicate static %s\n  old path: %s\n  new path: %s', reqPath,
-              file$[reqPath].path,
-              sp.path);
+        var reqPath;
+        if (self.indexFiles && self.indexFilesRe.test(file)) {
+          var shortPath = path.join(sp.route, file.replace(self.indexFilesRe, indexFileSlash));
+          if (!file$[shortPath]) {
+            reqPath = shortPath;
+          }
         }
-        file$[reqPath] = sp;
-        if (/^\/[^\/]+\.(htm|html)$/i.test(reqPath)) { dfile = reqPath; }
+        reqPath = reqPath || path.join(sp.route, file);
+
+        // only start logging dups on the last initial scan
+        if (file$[reqPath] && self.scanCnt >= staticPathsRev.length) {
+          log('duplicate static %s\n  %s\n  %s', file, file$[reqPath].sp.path, sp.path);
+        }
+        file$[reqPath] = {sp:sp, file:file}; // map reqPath to spo
       });
     });
 
-    // first recompute file$ and defaultFile and then switcheroo
+    // replace old map with recomputed map
     self.file$ = file$;
-    self.defaultFile = dfile;
-    if (server && cnt === staticPathsRev.length) { server.emit('static-scan'); }
   }
 
   // only serve files in self.file$
@@ -141,13 +166,36 @@ module.exports = function serveStatics(opts, server) {
     // surprisingly (bug?) express does not auto-decode req.path
     var reqPath = decodeURI(req.path);
 
-    var sp = self.file$[reqPath];
-    if (!sp) return next();
+    var file$ = self.file$;
 
-    debug('static %s', reqPath);
+    // try straight match
+    var spo = file$[reqPath];
 
-    var file = reqPath.slice(sp.route.length);
-    send(req, file, sp.sendOpts).pipe(res);
+    if (!spo && !/\/$|\.[^\/]+$/.test(reqPath)) {
+
+      // try adding trailing / and redirect if found
+      if (self.trailingSlash) {
+        var redir = reqPath + '/';
+        spo = file$[redir];
+        if (spo) {
+          debug('static redirect %s %s', reqPath, redir);
+          return res.redirect(302, redir); // use 302 to avoid browser redir caching
+        }
+      }
+
+      // try extensions
+      if (!spo && self.extensions) {
+        for (var i=0; i<self.extensions.length; i++) {
+          if (spo = file$[reqPath + self.extensions[i]]) break;
+        }
+      }
+    }
+
+    if (!spo) return next(); // give up
+
+    debug('static %s%s', reqPath, (reqPath !== spo.file ? ' -> ' + spo.file : ''));
+
+    send(req, spo.file, spo.sp.sendOpts).pipe(res);
   }
 
   // copy static files to opts.outputs[0].path preserving reqPath routes
@@ -162,16 +210,16 @@ module.exports = function serveStatics(opts, server) {
     if (!output || !count) return cb(log('outputAll: no ouput'));
 
     var done = u.after(count, function() {
-      log('output %s static files', result.length);
+      log('output %s %s static files', output.path, result.length);
       cb(result)
     });
 
-    u.each(self.file$, function(sp, reqPath) {
+    u.each(self.file$, function(spo, reqPath) {
 
       if (/^\/(admin|pub|server)\//.test(reqPath)) return done();
 
-      var src = path.join(sp.sendOpts.root, reqPath.slice(sp.route.length));
-      var dest = path.join(output.path, reqPath);
+      var src = path.join(spo.sp.src.path, spo.file);
+      var dest = path.join(output.path, spo.sp.route, spo.file);
 
       // copy will create dirs if necessary
       fs.copy(src, dest, function(err) {

@@ -12,32 +12,14 @@ var deepdiff = require('deep-diff');
 var u = require('pub-util');
 var EventEmitter = require('events').EventEmitter;
 
-test("routes, overwrites, and single-file paths", function(done) {
-  this.timeout(3000);
+runTest("routes, overwrites, and single-file paths",
 
-  var server = new EventEmitter();
+  [ { path:__dirname + '/static1' },
+    { path:__dirname + '/static2', route:'/', depth:2 },
+    { path:__dirname + '/static2', route:'/a/b', depth:2 },
+    { path:__dirname + '/static3/favicon.ico' },
+    { path:__dirname + '/static4/file5.txt', route:'/extra' } ],
 
-  var actualLogText = '';
-
-  server.opts = {
-    staticPaths: [
-      { path:__dirname + '/static1' },
-      { path:__dirname + '/static2', route:'/' },
-      { path:__dirname + '/static2', route:'/a/b' },
-      { path:__dirname + '/static3/favicon.ico' },
-      { path:__dirname + '/static4/file5.txt', route:'/extra' }
-    ],
-    log: function() {
-      console.log.apply(console, arguments);
-      actualLogText += u.format.apply(this, arguments) + '\n';
-    }
-  };
-
-  server.app = { use: noop, get: noop };
-
-  var statics = require('../server/serve-statics')(server);
-
-  var expected =
   [ '/extra/file5.txt',
     '/favicon.ico',
     '/a/b/dir3/file4.txt',
@@ -46,22 +28,90 @@ test("routes, overwrites, and single-file paths", function(done) {
     '/file5.jpg',
     '/dir1/file1.txt',
     '/dir1/file2.txt',
-    '/dir2/file3.txt' ];
+    '/dir2/file3.txt' ],
 
-  var expectedLogText =
-    'duplicate static /dir3/file4.txt\n' +
-    '  old path: ' + __dirname + '/static2\n' +
-    '  new path: ' + __dirname + '/static1\n';
+  [ '/file5.txt',
+    '/favicon.ico',
+    '/dir3/file4.txt',
+    '/file5.jpg',
+    '/dir3/file4.txt',
+    '/file5.jpg',
+    '/dir1/file1.txt',
+    '/dir1/file2.txt',
+    '/dir2/file3.txt' ],
 
-  server.on('static-scan', function() {
-    var actual = u.keys(statics.file$);
-  console.log(actual);
-    assertNoDiff(actual, expected);
-    assertNoDiff(actualLogText, expectedLogText);
-    done();
+  'duplicate static /dir3/file4.txt\n' +
+  '  ' + __dirname + '/static2\n' +
+  '  ' + __dirname + '/static1\n' );
+
+
+runTest("index.html",
+  [ { path:__dirname + '/static5' } ],
+  [ '/a/bar.foo', '/a/', '/a/index.x', '/foo.bar', '/index.htm', '/' ],
+  [ '/a/bar.foo',
+    '/a/index.html',
+    '/a/index.x',
+    '/foo.bar',
+    '/index.htm',
+    '/index.html' ],
+  '',
+  { indexFiles:['index.html'] }
+);
+
+runTest("index.htm",
+  [ { path:__dirname + '/static5' } ],
+  [ '/a/bar.foo', '/a/index.html', '/a/index.x', '/foo.bar', '/', '/index.html' ],
+  [ '/a/bar.foo',
+    '/a/index.html',
+    '/a/index.x',
+    '/foo.bar',
+    '/index.htm',
+    '/index.html' ],
+  '',
+  { indexFiles:['index.htm'] }
+);
+
+runTest("index.html, index.htm",
+  [ { path:__dirname + '/static5' } ],
+  [ '/a/bar.foo', '/a/', '/a/index.x', '/foo.bar', '/', '/index.html' ],
+  [ '/a/bar.foo',
+    '/a/index.html',
+    '/a/index.x',
+    '/foo.bar',
+    '/index.htm',
+    '/index.html' ],
+  '',
+  { indexFiles:['index.html', 'index.htm'] }
+);
+
+function runTest(name, staticPaths, expectedKeys, expectedFiles, expectedLogText, extraOpts) {
+  expectedLogText = expectedLogText || ''
+  test(name, function(done) {
+    this.timeout(3000);
+    var server = new EventEmitter();
+    var actualLogText = '';
+    var opts = {
+      staticPaths: staticPaths,
+      log: function() {
+        console.log.apply(console, arguments);
+        actualLogText += u.format.apply(this, arguments) + '\n';
+      }
+    };
+    if (extraOpts) { opts = u.extend(opts, extraOpts); }
+    server.app = { use: noop, get: noop };
+    var statics = require('../server/serve-statics')(opts, server);
+    server.on('static-scan', function() {
+      var actualKeys = u.keys(statics.file$);
+      var actualFiles = u.pluck(statics.file$, 'file');
+// console.log('keys:', actualKeys);
+// console.log('files:', actualFiles);
+      assertNoDiff(actualKeys, expectedKeys);
+      assertNoDiff(actualFiles, expectedFiles);
+      assertNoDiff(actualLogText, expectedLogText);
+      done();
+    });
   });
-
-});
+}
 
 function assertNoDiff(actual, expected, msg) {
   var diff = deepdiff(actual, expected);

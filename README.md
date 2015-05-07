@@ -32,8 +32,11 @@ Windows support is coming - PRs welcome.
 
 ### usage
 
+`pub -O` will generate .html files and copy a set of static files to `./out`
+
+`pub -s .` will serve the current directory and below as static files, with `index.html` for directories etc.
+
 `pub -h` will display a list of the available command line options.
-You can use a `pub-config.js` or `pub-config.json` file.
 
 ![command-line screen-shot](/images/screen2.png)
 

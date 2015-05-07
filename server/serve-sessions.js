@@ -67,6 +67,9 @@ module.exports = function serveSessions(server) {
   // redis is optional
   if (redisOpts) {
 
+    // allow true or 1 but coerce opts to {} to use defaults
+    if (typeof redisOpts !== 'object') { redisOpts = {}; }
+
     // https://github.com/tj/connect-redis
     var RedisStore = require('connect-redis')(expressSession);
 
