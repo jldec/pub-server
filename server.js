@@ -42,12 +42,12 @@ function pubServer(opts) {
 
   var generator = server.generator = require('pub-generator')(opts);
 
-  u.each(opts.serverPlugins, function(plugin) {
+  u.each(opts.serverPlugins.reverse(), function(plugin) {
     debug('server plugin:', plugin.inspect());
     require(plugin.path)(server);
   });
 
-  u.each(opts.generatorPlugins, function(plugin) {
+  u.each(opts.generatorPlugins.reverse(), function(plugin) {
     debug('generator plugin:', plugin.inspect());
     require(plugin.path)(generator);
   });

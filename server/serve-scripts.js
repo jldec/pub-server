@@ -104,7 +104,7 @@ module.exports = function serveScripts(server) {
   }
 
   function requirePlugins() {
-    var s = u.reduce(opts.generatorPlugins,
+    var s = u.reduce(opts.generatorPlugins.reverse(),
       function(memo, plugin) {
         return memo + 'require("' + plugin.path + '")(generator);\n';
       }, '');

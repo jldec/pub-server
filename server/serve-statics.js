@@ -134,6 +134,7 @@ module.exports = function serveStatics(opts, server) {
   function mapAllFiles() {
     var file$ = {};
     var indexFileSlash = self.trailingSlash ? '/' : '';
+    var dfile = '';
 
     // use reverse list so that first statics in config win e.g. over themes
     u.each(staticPathsRev, function(sp) {
@@ -152,11 +153,13 @@ module.exports = function serveStatics(opts, server) {
           log('duplicate static %s\n  %s\n  %s', file, file$[reqPath].sp.path, sp.path);
         }
         file$[reqPath] = {sp:sp, file:file}; // map reqPath to spo
+        if (/^\/[^\/]+\.(htm|html)$/i.test(reqPath)) { dfile = reqPath; }
       });
     });
 
     // replace old map with recomputed map
     self.file$ = file$;
+    self.defaultFile = dfile;
   }
 
   // only serve files in self.file$
