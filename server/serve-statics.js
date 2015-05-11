@@ -47,7 +47,7 @@ module.exports = function serveStatics(opts, server) {
   // server retry with trailing slash (similar to extensions) - bool
   self.trailingSlash = 'trailingSlash' in opts ? opts.trailingSlash : true;
 
-  // additionally serve 'path/{name}' as just 'path' (1st match wins) - array
+  // additionally serve 'path/name' as just 'path' (1st match wins) - array
   // [inverse of generator.output() for pages with _href = directory]
   self.indexFiles = 'indexFiles' in opts ? opts.indexFiles : ['index.html'];
 

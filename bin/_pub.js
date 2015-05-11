@@ -53,7 +53,7 @@ if (cli.theme.length)              { opts.themes = cli.theme; }
 if (cli.static.length)             { opts.staticPaths = cli.static; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
-if (cli.outputOnly)                { opts.production = opts.outputOnly = true; }
+if (cli.outputOnly)                { opts.outputOnly = true; }
 if (cli.pages)                     { opts.logPages = true; }
 if (!cli.watch || cli.outputOnly)  { opts['no-watch'] = true; }
 if (!cli.sockets)                  { opts['no-sockets'] = true; }
