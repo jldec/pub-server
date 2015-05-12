@@ -33,6 +33,7 @@ cli
   .option('-o, --output-path <dir>', 'output dir [.]')
   .option('-m, --md-fragments',      'use markdown headers as fragments')
   .option('-C, --config',            'show config and exit')
+  .option('-I, --ignore-config',     'ignore pub-config file')
   .option('-P, --pages',             'show pages and templates and exit')
   .option('-W, --no-watch',          'don\'t watch for changes')
   .option('-K, --no-sockets',        'no websockets')
@@ -54,6 +55,7 @@ if (cli.static.length)             { opts.staticPaths = cli.static; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
+if (cli.ignoreConfig)              { opts.ignoreConfig = true; }
 if (cli.pages)                     { opts.logPages = true; }
 if (!cli.watch || cli.outputOnly)  { opts['no-watch'] = true; }
 if (!cli.sockets)                  { opts['no-sockets'] = true; }

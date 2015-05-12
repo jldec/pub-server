@@ -126,6 +126,7 @@ module.exports = function serveStatics(opts, server) {
       self.scanCnt++;
       mapAllFiles();
       debug('static scan %s-deep %sms %s', sp.depth, timer(), sp.path.replace(/.*\/node_modules\//g, ''));
+      debug(files);
       cb();
     });
   }
