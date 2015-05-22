@@ -32,14 +32,35 @@ Windows support is coming - PRs welcome.
 
 ### usage
 
-`pub -O` will generate .html files and copy a set of static files to `./out`
+`pub` (with no options) serves `*.md` in the current directory or looks for `pub-config.js`.
 
-`pub -s .` will serve the current directory and below as static files, with `index.html` for directories etc.
+`pub -O` generates .html files and copy a set of static files to `./out`.
 
-`pub -h` will display a list of the available command line options.
+`pub -S` serves only static files.
 
-![command-line screen-shot](/images/screen2.png)
+`pub -h` shows the usage info below:
 
+```
+usage: pub [opts] [dir]
+opts:
+  -h, --help               output usage information
+  -p, --port <port>        server port [3001]
+  -t, --theme <name>       theme module-name or dir, repeatable
+  -o, --output-path <dir>  output dir [.]
+  -O, --output-only        output html with static files and exit
+  -s, --static <dir>       static dir, repeatable, supports <dir>,<route>
+  -S, --static-only        serve only static files from current dir
+  -m, --md-fragments       use markdown headers as fragments
+  -C, --config             show config and exit
+  -I, --ignore-config      ignore pub-config file
+  -P, --pages              show pages and templates and exit
+  -W, --no-watch           don't watch for changes
+  -K, --no-sockets         no websockets
+  -E, --no-editor          website only, no editor
+  -d, --dbg                enable scriptmaps and client-side debug traces
+  -D, --debug              node --debug (server and client-side)
+  -B, --debug-brk          node --debug-brk (server and client-side)
+```
 
 ### editor with instant preview
 
