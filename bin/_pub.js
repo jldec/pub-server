@@ -28,9 +28,10 @@ var u = require('pub-util');
 cli
   .option('-p, --port <port>',       'server port [3001]')
   .option('-t, --theme <name>',      'theme module-name or dir, repeatable', collect, [])
-  .option('-s, --static <dir>',      'static dir, repeatable, supports <dir>,<route>', collectStaticPaths, [])
-  .option('-O, --output-only',       'output html with static files and exit')
   .option('-o, --output-path <dir>', 'output dir [.]')
+  .option('-O, --output-only',       'output html with static files and exit')
+  .option('-s, --static <dir>',      'static dir, repeatable, supports <dir>,<route>', collectStaticPaths, [])
+  .option('-S, --static-only',       'serve only static files from current dir')
   .option('-m, --md-fragments',      'use markdown headers as fragments')
   .option('-C, --config',            'show config and exit')
   .option('-I, --ignore-config',     'ignore pub-config file')
@@ -55,11 +56,12 @@ if (cli.static.length)             { opts.staticPaths = cli.static; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
+if (cli.staticOnly)                { opts.staticOnly = true; }
 if (cli.ignoreConfig)              { opts.ignoreConfig = true; }
 if (cli.pages)                     { opts.logPages = true; }
 if (!cli.watch || cli.outputOnly)  { opts['no-watch'] = true; }
 if (!cli.sockets)                  { opts['no-sockets'] = true; }
-if (cli.editor && !cli.outputOnly) { opts.editor = true; }
+if (cli.editor && !cli.outputOnly && !cli.staticOnly) { opts.editor = true; }
 if (cli.dbg)                       { opts.dbg = process.env.DEBUG || '*'; opts['no-timeouts'] = true; }
 
 var server = require('../server')(opts);

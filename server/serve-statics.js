@@ -92,7 +92,7 @@ module.exports = function serveStatics(opts, server) {
                 server.generator.reload();
               });
             },
-            sp.throttle || '10s' ));
+            sp.throttle || opts.throttleReload || '10s' ));
         }
         done();
       });
@@ -109,9 +109,10 @@ module.exports = function serveStatics(opts, server) {
 
     // only construct src, defaults, sendOpts etc. once
     if (!src) {
-      sp.depth = sp.depth || 3; // default depth:3, 10min
+      sp.depth = sp.depth || 5;
       sp.maxAge = 'maxAge' in sp ? sp.maxAge : '10m';
       src = sp.src = fsbase(sp);
+      if (src.isfile()) { sp.depth = 1; }
       sp.sendOpts = u.merge(
         u.pick(sp, 'maxAge', 'lastModified', 'etag'),
         { dotfiles:'ignore',
