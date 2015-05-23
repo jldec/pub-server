@@ -105,10 +105,8 @@ function pubServer(opts) {
     server.emit('init-app-first');
     server.sessions.authorizeRoutes();
 
-    if (!opts.staticOnly) {
-      require('./server/serve-pages')(server);
-      require('./server/serve-scripts')(server);
-    }
+    require('./server/serve-pages')(server);
+    require('./server/serve-scripts')(server);
     server.statics = require('./server/serve-statics')(opts, server);
 
     server.emit('init-app-last');

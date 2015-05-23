@@ -47,9 +47,11 @@ module.exports = function serveStatics(opts, server) {
   // server retry with trailing slash (similar to extensions) - bool
   self.trailingSlash = 'trailingSlash' in opts ? opts.trailingSlash : true;
 
-  // additionally serve 'path/name' as just 'path' (1st match wins) - array
+  // additionally serve 'path/index' as just 'path' (1st match wins) - array
   // [inverse of generator.output() for pages with _href = directory]
   self.indexFiles = 'indexFiles' in opts ? opts.indexFiles : ['index.html'];
+  // send Content-Type=text/html header for extensionless files
+  self.noHtmlExtensions = opts.noHtmlExtensions;
 
   if (self.indexFiles && self.indexFiles.length) {
     self.indexFilesRe = new RegExp(
@@ -66,8 +68,7 @@ module.exports = function serveStatics(opts, server) {
     }
     else {
       server.emit('static-scan');
-      if (!server.generator.home) log('serving %s static files (%s %s %s)',
-        u.size(self.file$), self.extensions, self.trailingSlash ? '../' : '', self.indexFiles);
+      if (!server.generator.home) { log('%s static files', u.size(self.file$)) };
     }
   });
 
@@ -197,6 +198,10 @@ module.exports = function serveStatics(opts, server) {
     }
 
     if (!spo) return next(); // give up
+
+    if (self.noHtmlExtensions && !path.extname(spo.file)) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    }
 
     debug('static %s%s', reqPath, (reqPath !== spo.file ? ' -> ' + spo.file : ''));
 

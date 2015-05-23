@@ -31,7 +31,7 @@ cli
   .option('-o, --output-path <dir>', 'output dir [.]')
   .option('-O, --output-only',       'output html with static files and exit')
   .option('-s, --static <dir>',      'static dir, repeatable, supports <dir>,<route>', collectStaticPaths, [])
-  .option('-S, --static-only',       'serve only static files from current dir')
+  .option('-S, --static-only <dir>', 'serve only static files from <dir>', collectStaticPaths, [])
   .option('-m, --md-fragments',      'use markdown headers as fragments')
   .option('-C, --config',            'show config and exit')
   .option('-I, --ignore-config',     'ignore pub-config file')
@@ -52,11 +52,11 @@ opts.dir = cli.args[0] || '.';
 
 if (cli.port)                      { opts.port = cli.port; }
 if (cli.theme.length)              { opts.themes = cli.theme; }
-if (cli.static.length)             { opts.staticPaths = cli.static; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
-if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
-if (cli.staticOnly)                { opts.staticOnly = true; }
+if (cli.static.length)             { opts.staticPaths = cli.static; }
+if (cli.staticOnly.length)         { opts.staticOnly = cli.staticOnly; }
+if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
 if (cli.ignoreConfig)              { opts.ignoreConfig = true; }
 if (cli.pages)                     { opts.logPages = true; }
 if (!cli.watch || cli.outputOnly)  { opts['no-watch'] = true; }
@@ -81,10 +81,10 @@ function collectStaticPaths(val, arr) {
   var pair = val.split(',');
 
   if (pair.length > 1) {
-    arr.push( { path: pair[0], route: pair[1], depth: 10 } );
+    arr.push( { path: pair[0], route: pair[1] } );
   }
   else {
-    arr.push( { path: pair[0], depth: 10 } );
+    arr.push( { path: pair[0] } );
   }
 
   return arr;
