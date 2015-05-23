@@ -61,7 +61,7 @@ if (cli.ignoreConfig)              { opts.ignoreConfig = true; }
 if (cli.pages)                     { opts.logPages = true; }
 if (!cli.watch || cli.outputOnly)  { opts['no-watch'] = true; }
 if (!cli.sockets)                  { opts['no-sockets'] = true; }
-if (cli.editor && !cli.outputOnly && !cli.staticOnly) { opts.editor = true; }
+if (cli.editor && !cli.outputOnly && !cli.staticOnly.length) { opts.editor = true; }
 if (cli.dbg)                       { opts.dbg = process.env.DEBUG || '*'; opts['no-timeouts'] = true; }
 
 var server = require('../server')(opts);
