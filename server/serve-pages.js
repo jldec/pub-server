@@ -10,6 +10,8 @@
 
 var debug = require('debug')('pub:server:pages');
 var u = require('pub-util');
+var mime = require('mime');
+var path = require('path');
 
 module.exports = function servePages(server) {
 
@@ -61,12 +63,15 @@ module.exports = function servePages(server) {
 
   function resHeaders(res, page) {
     var headers = page['http-header'];
-    if (!headers) return;
     if (typeof headers === 'string') { headers = [ headers ]; }
     u.each(headers, function(s) {
       var m = s.match(/^\s*([^:]+?)\s*:\s*(\S.*?)\s*$/);
       if (m) { res.set(m[1], m[2]); }
     });
+
+    var ext = path.extname(page._href);
+    if (!ext || res.getHeader('Content-Type')) return;
+    res.set('Content-Type', mime.lookup(ext));
   }
 
   function redirects(req, res, next) {

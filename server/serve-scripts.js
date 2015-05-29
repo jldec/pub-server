@@ -32,7 +32,7 @@ module.exports = function serveScripts(server) {
   u.each(opts.browserScripts, function(script) {
 
     // translate maxAge -> cache for consistency with static send
-    var browserifyOpts = u.omit(script, 'path', 'route', 'maxAge');
+    var browserifyOpts = u.omit(script, 'path', 'route', 'inject', 'maxAge');
     if ('maxAge' in script) { browserifyOpts.cache = script.maxAge || 'dynamic'; }
 
     app.get(script.route, browserify(script.path, browserifyOpts));
