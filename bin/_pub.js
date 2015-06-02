@@ -51,7 +51,7 @@ opts.cli = true;
 opts.dir = cli.args[0] || '.';
 
 if (cli.port)                      { opts.port = cli.port; }
-if (cli.theme.length)              { opts.themes = cli.theme; }
+if (cli.theme.length)              { opts.pkgs = cli.theme; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
 if (cli.static.length)             { opts.staticPaths = cli.static; }

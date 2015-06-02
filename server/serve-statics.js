@@ -139,7 +139,7 @@ module.exports = function serveStatics(opts, server) {
     var indexFileSlash = self.trailingSlash ? '/' : '';
     var dfile = '';
 
-    // use reverse list so that first statics in config win e.g. over themes
+    // use reverse list so that first statics in config win e.g. over packages
     u.each(staticPathsRev, function(sp) {
       u.each(sp.files, function(file) {
         var reqPath;
