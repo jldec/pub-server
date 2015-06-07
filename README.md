@@ -41,6 +41,8 @@ Windows support is coming - PRs welcome.
 `pub -h` shows the usage info below:
 
 ```
+pub-server v1.7.0
+
 usage: pub [opts] [dir]
 opts:
   -h, --help               output usage information
@@ -49,7 +51,7 @@ opts:
   -o, --output-path <dir>  output dir [.]
   -O, --output-only        output html with static files and exit
   -s, --static <dir>       static dir, repeatable, supports <dir>,<route>
-  -S, --static-only        serve only static files from current dir
+  -S, --static-only <dir>  serve only static files from <dir>
   -m, --md-fragments       use markdown headers as fragments
   -C, --config             show config and exit
   -I, --ignore-config      ignore pub-config file
