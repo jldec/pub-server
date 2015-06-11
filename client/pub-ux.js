@@ -16,7 +16,7 @@ if (window.io) {
   socket.on('reload', function() {
     // in-browser generator case, just notify
     if (window.generator) {
-      return window.generator.emit('notify', 'Server file changed, reload to avoid conflicts.');
+      return window.generator.emit('notify', 'save');
     }
     debug('socket:reload');
     location.reload();
