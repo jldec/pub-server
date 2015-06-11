@@ -1,6 +1,6 @@
 {
   "name": "pub-server",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "description": "markdown site generator, web server, and editor",
   "main": "server.js",
   "preferGlobal": true,
