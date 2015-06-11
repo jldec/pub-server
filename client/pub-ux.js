@@ -14,7 +14,10 @@ if (window.io) {
   var socket = io();
 
   socket.on('reload', function() {
-    if (window.generator) return; // in-browser generator disables socket:reload
+    // in-browser generator case, just notify
+    if (window.generator) {
+      return window.generator.emit('notify', 'Server file changed, reload to avoid conflicts.');
+    }
     debug('socket:reload');
     location.reload();
   });

@@ -83,7 +83,7 @@ You can also use it to edit your markdown when pub is running locally.
 ### packages and themes
 
 - **pub-server** can be extended with npm packages containing plugins and themes
-- the default theme for pub-server is [pub-theme-gfm](https://github.com/jldec/pub-theme-gfm)
+- the default theme for pub-server is [pub-theme-doc](https://github.com/jldec/pub-theme-doc)
 - the editor is [pub-pkg-editor](https://github.com/jldec/pub-pkg-editor)
 
 
