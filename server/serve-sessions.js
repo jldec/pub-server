@@ -74,7 +74,12 @@ module.exports = function serveSessions(server) {
     var RedisStore = require('connect-redis')(expressSession);
 
     // store must live in sessionOpts.store for expressSession to use it
-    var store = self.store = sessionOpts.store = new RedisStore(redisOpts);
+    var store = self.store = sessionOpts.store = new RedisStore(
+      u.merge(redisOpts,
+        { host: process.env.RCH || 'localhost',
+          port: process.env.RCP || 6379,
+          pass: process.env.RCA || '' } ));
+
     var redis = self.redis = store.client;
 
     redis.on('error', function(err) { log(err); });
