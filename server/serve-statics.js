@@ -149,7 +149,8 @@ module.exports = function serveStatics(opts, server) {
 
     // use reverse list so that first statics in config win e.g. over packages
     u.each(staticPathsRev, function(sp) {
-      u.each(sp.files, function(file) {
+      u.each(sp.files, function(entry) {
+        var file = entry.filepath;
         var reqPath;
         if (self.indexFiles && self.indexFilesRe.test(file)) {
           var shortPath = path.join(sp.route, file.replace(self.indexFilesRe, indexFileSlash));
@@ -249,4 +250,3 @@ module.exports = function serveStatics(opts, server) {
   }
 
 }
-
