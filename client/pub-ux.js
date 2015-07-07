@@ -39,17 +39,17 @@ $(function(){
     'z-index':'200',
     'opacity':'0.5',
     'font-family': '"Helvetica Neue",Tahoma,Arial,sans-serif',
-    'font-size': '0.82em',
-    'line-height': '1.3',
-    // 'width':'1.4em',
-    'height':'1.4em',
+    'font-weight': '400',
+    'font-size': '18px',
+    'line-height': '20px',
+    'height':'21px',
     'top':'0',
     'right':'0',
     'background-color':'#555',
     'color':'#fff',
     'border-bottom-left-radius':'10px',
     'text-align':'right',
-    'padding':'0 4px',
+    'padding':'0 2px 0 5px',
     'cursor':'pointer' };
 
   if (window.parent.location.href.match(new RegExp('.*?//[^/]*' + prefix + '/'))) {
