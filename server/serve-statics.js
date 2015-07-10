@@ -1,12 +1,14 @@
 /*
  * pub-server serve-statics.js
  *
- * if no server is passed in, copy static inventory to outputs[0] (for pub -O)
- *
  * serve static files by scanning static paths at startup - default depth:3
  * allows many static paths and single files (like favicons) mounted on root
  * without stat'ing the file system on each path for each request
  * the tradeoff is a delay or 404s serving statics during initial scan
+ *
+ * API: serveStatics(opts, server) returns serveStatics object
+ *   server optional, if not passed, no routes served
+ *   serveStatics.outputAll() - copy static inventory to outputs[0] (for pub -O)
  *
  * uses send (same as express.static)
  *
@@ -35,7 +37,7 @@ module.exports = function serveStatics(opts, server) {
   var staticPaths = opts.staticPaths;
   var staticPathsRev = opts.staticPaths.slice(0).reverse();
 
-  var defaultOutput = (opts.outputs && opts.outputs[0]) || opts.outputOpts;
+  var defaultOutput = (opts.outputs && opts.outputs[0]);
   var outputExtension = defaultOutput && defaultOutput.extension;
   var noOutputExtensions = outputExtension === '';
 
@@ -69,12 +71,11 @@ module.exports = function serveStatics(opts, server) {
   }
   else self.indexFiles = false; // allow use as boolean, false if empty
 
+  self.outputAll = outputAll; // for pub -O
+
   // perform initial scan
   scanAll(function() {
-    if (!server) {
-      outputAll();
-    }
-    else {
+    if (server) {
       server.emit('static-scan');
       if (!server.generator.home) { log('%s static files', u.size(self.file$)) };
     }
@@ -225,16 +226,19 @@ module.exports = function serveStatics(opts, server) {
     var count = u.size(self.file$);
     var result = [];
 
-    if (!defaultOutput || !count) return cb(log('outputAll: no output'));
+    if (!defaultOutput || !count) return cb(log('statics.outputAll: no output'));
 
     var done = u.after(count, function() {
       log('output %s %s static files', defaultOutput.path, result.length);
       cb(result)
     });
 
-    u.each(self.file$, function(spo, reqPath) {
+    var filterRe = new RegExp('^/(admin|server' +
+                              (defaultOutput.editor ? '' : '|pub') +
+                              ')/');
 
-      if (/^\/(admin|pub|server)\//.test(reqPath)) return done();
+    u.each(self.file$, function(spo, reqPath) {
+      if (filterRe.test(reqPath)) return done();
 
       var src = path.join(spo.sp.src.path, spo.file);
       var dest = path.join(defaultOutput.path, spo.sp.route, spo.file);
