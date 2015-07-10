@@ -27,10 +27,7 @@ module.exports = function watch(src, onEvent) {
 
   wOpts.interval = u.ms(wOpts.interval);
 
-  debug('watching %s-deep %s %s',
-    wOpts.depth,
-    src.files.length,
-    src.path);
+  debug('watching %s', src.path);
 
   chokidar.watch(wDir, wOpts)
   .on('all', function(evt, path) {
