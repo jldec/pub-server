@@ -111,10 +111,9 @@ function runTest(name, staticPaths, expectedKeys, expectedFiles, expectedLogText
     };
     if (extraOpts) { opts = u.extend(opts, extraOpts); }
     server.app = { use: noop, get: noop };
-    var statics = require('../server/serve-statics')(opts, server);
-    server.on('static-scan', function() {
-      var actualKeys = u.keys(statics.file$);
-      var actualFiles = u.pluck(statics.file$, 'file');
+    var statics = require('../server/serve-statics')(opts, function(err, file$) {
+      var actualKeys = u.keys(file$);
+      var actualFiles = u.pluck(file$, 'file');
 // console.log('keys:', actualKeys);
 // console.log('files:', actualFiles);
       assertNoDiff(actualKeys, expectedKeys);

@@ -63,8 +63,10 @@ function pubServer(opts) {
 
       if (opts.outputOnly) {
         generator.outputPages();
-        require('./server/serve-statics')(opts).outputAll();
-        require('./server/serve-scripts')(opts).outputAll();
+        var statics = require('./server/serve-statics')(opts, function(){
+          statics.outputAll();
+        });
+        // require('./server/serve-scripts')(opts).outputAll();
         generator.unload();
         return;
       }
@@ -108,7 +110,7 @@ function pubServer(opts) {
 
     require('./server/serve-pages')(server);
     server.scripts = require('./server/serve-scripts')(opts, server);
-    server.statics = require('./server/serve-statics')(opts, server);
+    server.statics = require('./server/serve-statics')(opts).serveRoutes(server);
 
     server.emit('init-app-last');
 

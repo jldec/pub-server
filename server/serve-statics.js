@@ -6,8 +6,8 @@
  * without stat'ing the file system on each path for each request
  * the tradeoff is a delay or 404s serving statics during initial scan
  *
- * API: serveStatics(opts, server) returns serveStatics object
- *   server optional, if not passed, no routes served
+ * API: serveStatics(opts, cb) returns serveStatics object, calls cb after scan
+ *   serveStatics.serveRoutes(server) - serve routes and start watches
  *   serveStatics.outputAll() - copy static inventory to outputs[0] (for pub -O)
  *
  * uses send (same as express.static)
@@ -29,9 +29,9 @@ var fsbase = require('pub-src-fs/fs-base');
 var send = require('send');
 var watch = require('./watch');
 
-module.exports = function serveStatics(opts, server) {
+module.exports = function serveStatics(opts, cb) {
 
-  if (!(this instanceof serveStatics)) return new serveStatics(opts, server);
+  if (!(this instanceof serveStatics)) return new serveStatics(opts, cb);
   var self = this;
   var log = opts.log;
   var staticPaths = opts.staticPaths;
@@ -44,6 +44,7 @@ module.exports = function serveStatics(opts, server) {
   self.file$ = {};  // maps each possible file request path -> staticPath
   self.scanCnt = 0; // how many scans have been completed
   self.defaultFile = ''; // default file to serve if no other pages available
+  self.server;      // initialized by self.serveRoutes(server)
 
   // global opts
 
@@ -71,41 +72,53 @@ module.exports = function serveStatics(opts, server) {
   }
   else self.indexFiles = false; // allow use as boolean, false if empty
 
-  self.outputAll = outputAll; // for pub -O
+  self.serveRoutes = serveRoutes;
+  self.outputAll = outputAll;      // for pub -O
 
-  // perform initial scan
-  scanAll(function() {
-    if (server) {
-      server.emit('static-scan');
-      if (!server.generator.home) { log('%s static files', u.size(self.file$)) };
-    }
+  scanAll(function(err) {
+    if (self.server && self.server.generator && !self.server.generator.home) {
+      log('%s static files', u.size(self.file$));
+    };
+    cb && cb(err, self.file$);
   });
 
-  if (server) {
-    // deploy middleware before scanAll() completes and then return
-    server.app.use(serve);
-    server.app.get('/admin/statics', function(req, res) { res.send(Object.keys(self.file$)); })
-  }
+  return;
 
   //--//--//--//--//--//--//--//--//--//--//--//--//--//
 
-  // scan each staticPath and initialize watches
+  // deploy middleware and initialize watches
+  // note: this may be called before scanAll() completes
+  function serveRoutes(server) {
+    self.server = server;
+    server.app.use(serve);
+    server.app.get('/admin/statics', function(req, res) { res.send(Object.keys(self.file$)); })
+    watchAll();
+    return self; // chainable
+  }
+
+
+  // scan each staticPath
   // no error propagation, just log(err)
   function scanAll(cb) {
     var done = u.after(staticPaths.length, u.maybe(cb));
     u.each(staticPaths, function(sp) {
       scan(sp, function(err) {
-        if (!err && server && sp.watch && !opts['no-watch']) {
-          watch(sp, u.throttleMs(
-            function() {
-              scan(sp, function() {
-                server.generator.reload();
-              });
-            },
-            sp.throttle || opts.throttleReload || '10s' ));
-        }
         done();
       });
+    });
+  }
+
+  function watchAll() {
+    u.each(staticPaths, function(sp) {
+      if (sp.watch && !opts['no-watch']) {
+        watch(sp, u.throttleMs(function() {
+          scan(sp, function() {
+            if (self.server && self.server.generator) {
+              self.server.generator.reload();
+            }
+          });
+        }, sp.throttle || opts.throttleReload || '10s'));
+      }
     });
   }
 
@@ -251,6 +264,7 @@ module.exports = function serveStatics(opts, server) {
       });
 
     });
+    return self; // chainable
   }
 
 }
