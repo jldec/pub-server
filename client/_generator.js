@@ -17,10 +17,13 @@ initOpts(function(err, opts) {
 
   // start client-side pub-generator
   var generator = window.generator = require('pub-generator')(opts);
+  opts.log.logger.noErrors = true;
 
   // get browserified generator plugins - avoid caching across directories
   $.getScript('/pub/_generator-plugins.js?_=' + encodeURIComponent(opts.basedir))
-  .fail(function(jqXHR) { alert('unable to load generator plugins'); })
+  .fail(function(jqXHR) {
+    opts.log(new Error(jqXHR.responseText));
+  })
   .done(function(script) {
     debug('plugins loaded');
 
