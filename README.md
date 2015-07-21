@@ -41,15 +41,16 @@ Windows support is coming - PRs welcome.
 `pub -h` shows the usage info below:
 
 ```
-pub-server v1.7.0
+pub-server v1.7.15
 
 usage: pub [opts] [dir]
 opts:
   -h, --help               output usage information
   -p, --port <port>        server port [3001]
   -t, --theme <name>       theme module-name or dir, repeatable
-  -o, --output-path <dir>  output dir [.]
-  -O, --output-only        output html with static files and exit
+  -o, --output-path <dir>  output dir [./out]
+  -O, --output-only        output html, scripts, static files and exit
+  -G, --html-only          output generated html files and exit
   -s, --static <dir>       static dir, repeatable, supports <dir>,<route>
   -S, --static-only <dir>  serve only static files from <dir>
   -m, --md-fragments       use markdown headers as fragments

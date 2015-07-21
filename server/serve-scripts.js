@@ -15,60 +15,85 @@ var debug = require('debug')('pub:server:scripts');
 var u = require('pub-util');
 var through = require('through2');
 var fspath = require('path');
+var fs = require('fs-extra');
 
 module.exports = function serveScripts(opts, server) {
 
-  if (!(this instanceof serveScripts)) return new serveScripts(opts, server);
+  if (!(this instanceof serveScripts)) return new serveScripts(opts);
+  var self = this;
+  var log = opts.log;
 
-  var defaultOutput = (opts.outputs && opts.outputs[0]);
-  this.outputAll = outputAll; // for pub -O
+  self.serveRoutes = serveRoutes;
+  self.outputAll = outputAll;     // for pub -O
 
   var browserify = require('browserify-middleware');
-  if (!opts.dbg) { browserify.settings.mode = 'production'; }
 
-  browserify.settings( { ignore: ['request', 'request-debug', 'pub-src-fs', 'resolve', 'osenv', 'tmp'],
+  // expose build-bundle for output to file
+  browserify.buildBundle = require('browserify-middleware/lib/build-bundle.js');
+
+  // if (!opts.dbg) { browserify.settings.mode = 'production'; }
+
+  browserify.settings( { ignore: ['request', 'request-debug', 'graceful-fs', 'resolve', 'osenv', 'tmp'],
                          ignoreMissing: false } );
 
   browserify.settings.production('cache', '1h');
 
-  if (server) {
+  // prepare array of browserscripts including builtins
+  self.scripts = u.map(opts.browserScripts, function(script) {
+    var o = {
+      route: script.route,
+      path:  script.path,
+      opts:  u.omit(script, 'path', 'route', 'inject', 'maxAge')
+    }
+    if ('maxAge' in script) { o.opts.cache = script.maxAge || 'dynamic'; }
+    return o;
+  });
+
+  self.scripts.push( {
+    route: '/server/pub-ux.js',
+    path: fspath.join(__dirname, '../client/pub-ux.js')
+  } );
+
+  // editor scripts
+  if (opts.editor) {
+
+    self.scripts.push( {
+      route: '/pub/_generator.js',
+      path:  fspath.join(__dirname, '../client/_generator.js'),
+    } );
+
+    self.scripts.push( {
+      route: '/pub/_generator-plugins.js',
+      path:  fspath.join(__dirname, '../client/_generator-plugins.js'),
+      opts:  { transform: [transformPlugins] }
+    } );
+  }
+
+  return;
+
+  //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
+
+  // deploy browserify scripts and editor/admin handlers
+  function serveRoutes(server) {
     var app = server.app;
     var generator = server.generator;
 
-    // deploy middleware
-    u.each(opts.browserScripts, function(script) {
-
-      // translate maxAge -> cache for consistency with static send
-      var browserifyOpts = u.omit(script, 'path', 'route', 'inject', 'maxAge');
-      if ('maxAge' in script) { browserifyOpts.cache = script.maxAge || 'dynamic'; }
-
-      app.get(script.route, browserify(script.path, browserifyOpts));
+    // route browserscripts, including builtins
+    u.each(self.scripts, function(script) {
+      app.get(script.route, browserify(script.path, script.opts));
     });
-
-    // browser client for pub-server notifications
-    app.get('/server/pub-ux.js',
-      browserify(fspath.join(__dirname, '../client/pub-ux.js')));
 
     // editor api
     if (opts.editor) {
-
-      app.get('/pub/_generator.js',
-        browserify(fspath.join(__dirname, '../client/_generator.js')));
-
-      app.get('/pub/_generator-plugins.js',
-        browserify(fspath.join(__dirname, '../client/_generator-plugins.js'),
-                  { transform: [transformPlugins] } ));
-
-      app.get('/pub/_opts.json', function(req, res) {
-        res.set('Cache-Control', 'no-cache');
-        res.send(serializeOpts());
-      });
-
       app.post('/pub/_files', function(req, res) {
         generator.serverSave(req.body, req.user, function(err, results) {
           if (err) return res.status(500).send(err);
           res.status(200).send(results);
         })
+      });
+      app.get('/pub/_opts.json', function(req, res) {
+        res.set('Cache-Control', 'no-cache');
+        res.send(serializeOpts(server.generator));
       });
     }
 
@@ -94,34 +119,30 @@ module.exports = function serveScripts(opts, server) {
     });
   }
 
-  return;
+  // publish browserscripts
+  function outputAll(generator) {
 
-  //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
+    var dest = (opts.outputs && opts.outputs[0]);
+    if (!dest) return log('scripts.outputAll: no output');
 
-  function outputAll(cb) {
-    cb = u.maybe(cb);
+    u.each(self.scripts, function(script) {
+      var out = fspath.join(dest.path, script.route);
+      var ws = fs.createOutputStream(out);
+      ws.on('finish', function() {
+        log('output script: %s', out);
+      });
+      ws.on('error', log);
 
-    var count = u.size(opts.browserScripts);
-    var result = [];
-
-    if (!defaultOutput || !count) return cb(log('scripts.outputAll: no output'));
-
-    var done = u.after(count, function() {
-      log('output %s %s scripts', defaultOutput.path, result.length);
-      cb(result)
+      // from browserify-middleware index.js (may need to do noParse map also)
+      var options = browserify.settings.normalize(script.opts);
+      var bundler = browserify.buildBundle(script.path, options);
+      if (!opts.dbg) { bundler.plugin(require.resolve('minifyify'), { map:false } ); }
+      bundler.bundle().pipe(ws);
     });
 
-    var filterRe = new RegExp('^/(admin|server' +
-                              (defaultOutput.editor ? '' : '|pub') +
-                              ')/');
-
-    u.each(opts.browserScripts, function(script) {
-      if (filterRe.test(script.path)) return done();
-
-      var dest = fspath.join(defaultOutput.path, script.route);
-
-      var browserifyOpts = u.omit(script, 'path', 'route', 'inject', 'maxAge');
-      browserify(script.path, browserifyOpts);
+    var out = fspath.join(dest.path, '/pub/_opts.json');
+    fs.outputJson(out, serializeOpts(generator, true), function(err) {
+      log(err || 'output opts: %s', out);
     });
   }
 
@@ -147,22 +168,26 @@ module.exports = function serveScripts(opts, server) {
     return s;
   }
 
-  function serializeOpts() {
-    var serializable = u.omit(opts, 'output$', 'source$', 'log', 'session');
-    serializable.staticPaths = u.map(opts.staticPaths, function(staticPath) {
+  function serializeOpts(generator, toStatic) {
+    var sOpts = u.omit(opts, 'output$', 'source$', 'log', 'session');
+
+    // provide for detection of static hosted editor
+    if (toStatic) { sOpts.staticHost = true; }
+
+    sOpts.staticPaths = u.map(opts.staticPaths, function(staticPath) {
       return u.omit(staticPath, 'files', 'src');
     });
-    serializable.outputs = u.map(opts.outputs, function(output) {
+    sOpts.outputs = u.map(opts.outputs, function(output) {
       return u.omit(output, 'files', 'src');
     });
-    serializable.sources = u.map(opts.sources, function(source) {
+    sOpts.sources = u.map(opts.sources, function(source) {
       var rawSource = u.omit(source, 'files', 'src', 'file$', 'fragments', 'updates', 'snapshots', 'drafts', 'cache');
       rawSource.files = source.type === 'FILE' ?
-        server.generator.serializeFiles(source.files) :
+        generator.serializeFiles(source.files) :
         source.files;
       return rawSource;
       });
-    return serializable;
+    return sOpts;
   }
 
 }

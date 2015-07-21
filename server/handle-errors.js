@@ -7,7 +7,7 @@
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
  */
 
-var debug = require('debug')('pub:server:errors');
+var debug = require('debug')('pub:server');
 var path = require('path');
 var u = require('pub-util');
 

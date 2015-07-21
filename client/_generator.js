@@ -2,33 +2,18 @@
  * _generator.js
  *
  * browserify entry point to load generator into client
- * invokes $.getJSON to fetch opts (with in-line serialized data) and plugins
  * depends on jquery
  *
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
 */
 
-var dbg = require('debug')
-var debug = dbg('pub:generator');
+var debug = require('debug')('pub:generator');
+var initOpts = require('./init-opts');
 
 $.ajaxSetup( { cache: true } );
 
-$.getJSON('/pub/_opts.json')
-.fail(function(jqXHR) { alert('unable to load /pub/_opts.json'); })
-.done(function(respData) {
-
-  // opts includes source.file data for all sources
-  // see pub-server serve-scripts
-  var opts = respData;
-
-  // enable debug tracing on client
-  dbg.enable(opts.dbg);
-
-  // recreate opts.source$ map (not serialized)
-  opts.source$ = {};
-  opts.sources.forEach(function(source) {
-    opts.source$[source.name] = source;
-  });
+// init client-side opts
+initOpts(function(err, opts) {
 
   // start client-side pub-generator
   var generator = window.generator = require('pub-generator')(opts);
@@ -39,6 +24,7 @@ $.getJSON('/pub/_opts.json')
   .done(function(script) {
     debug('plugins loaded');
 
+    // load sources
     generator.load(function(err) {
       if (err) return opts.log(err);
       debug('generator loaded');

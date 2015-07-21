@@ -28,8 +28,9 @@ var u = require('pub-util');
 cli
   .option('-p, --port <port>',       'server port [3001]')
   .option('-t, --theme <name>',      'theme module-name or dir, repeatable', collect, [])
-  .option('-o, --output-path <dir>', 'output dir [.]')
-  .option('-O, --output-only',       'output html with static files and exit')
+  .option('-o, --output-path <dir>', 'output dir [./out]')
+  .option('-O, --output-only',       'output html, scripts, static files and exit')
+  .option('-G, --html-only',         'output generated html files and exit')
   .option('-s, --static <dir>',      'static dir, repeatable, supports <dir>,<route>', collectStaticPaths, [])
   .option('-S, --static-only <dir>', 'serve only static files from <dir>', collectStaticPaths, [])
   .option('-m, --md-fragments',      'use markdown headers as fragments')
@@ -54,14 +55,15 @@ if (cli.port)                      { opts.port = cli.port; }
 if (cli.theme.length)              { opts.pkgs = cli.theme; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
+if (cli.htmlOnly)                  { opts.htmlOnly = true; }
 if (cli.static.length)             { opts.staticPaths = cli.static; }
 if (cli.staticOnly.length)         { opts.staticOnly = cli.staticOnly; }
 if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
 if (cli.ignoreConfig)              { opts.ignoreConfig = true; }
 if (cli.pages)                     { opts.logPages = true; }
-if (!cli.watch || cli.outputOnly)  { opts['no-watch'] = true; }
+if (!cli.watch || cli.outputOnly || cli.htmlOnly)  { opts['no-watch'] = true; }
 if (!cli.sockets)                  { opts['no-sockets'] = true; }
-if (cli.editor && !cli.outputOnly && !cli.staticOnly.length) { opts.editor = true; }
+if (cli.editor && !cli.staticOnly.length) { opts.editor = true; }
 if (cli.dbg)                       { opts.dbg = process.env.DEBUG || '*'; opts['no-timeouts'] = true; }
 
 var server = require('../server')(opts);

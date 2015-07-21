@@ -150,7 +150,7 @@ module.exports = function serveStatics(opts, cb) {
       self.scanCnt++;
       mapAllFiles();
       debug('static scan %s-deep %sms %s', sp.depth, timer(), sp.path.replace(/.*\/node_modules\//g, ''));
-      debug(files);
+      debug(files.length > 10 ? '[' + files.length + ' files]' : u.pluck(files, 'filepath'));
       cb();
     });
   }
@@ -247,7 +247,7 @@ module.exports = function serveStatics(opts, cb) {
     });
 
     var filterRe = new RegExp('^/(admin|server' +
-                              (defaultOutput.editor ? '' : '|pub') +
+                              (opts.editor ? '' : '|pub') +
                               ')/');
 
     u.each(self.file$, function(spo, reqPath) {

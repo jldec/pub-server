@@ -61,12 +61,15 @@ function pubServer(opts) {
     generator.load(function(err) {
       if (err) return log(err);
 
-      if (opts.outputOnly) {
+      if (opts.outputOnly || opts.htmlOnly) {
         generator.outputPages();
-        var statics = require('./server/serve-statics')(opts, function(){
-          statics.outputAll();
-        });
-        // require('./server/serve-scripts')(opts).outputAll();
+
+        if (!opts.htmlOnly) {
+          var statics = require('./server/serve-statics')(opts, function(){
+            statics.outputAll();
+          });
+          require('./server/serve-scripts')(opts).outputAll(generator);
+        }
         generator.unload();
         return;
       }
@@ -96,7 +99,7 @@ function pubServer(opts) {
     log.logger.noErrors = true;
 
     // sessions come with optional redis logger
-    server.sessions = require('./server/serve-sessions')(server);
+    server.sessions = require('pub-serve-sessions')(server);
     log('starting up', opts.appUrl);
 
     // other default middleware
@@ -108,8 +111,10 @@ function pubServer(opts) {
     server.emit('init-app-first');
     server.sessions.authorizeRoutes();
 
-    require('./server/serve-pages')(server);
-    server.scripts = require('./server/serve-scripts')(opts, server);
+    if (!opts.staticOnly) {
+      require('./server/serve-pages')(server);
+      server.scripts = require('./server/serve-scripts')(opts).serveRoutes(server);
+    }
     server.statics = require('./server/serve-statics')(opts).serveRoutes(server);
 
     server.emit('init-app-last');
