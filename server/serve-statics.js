@@ -21,7 +21,7 @@
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
  */
 
-var debug = require('debug')('pub:server:statics');
+var debug = require('debug')('pub:static');
 var u = require('pub-util');
 var fs = require('fs-extra');
 var path = require('path');

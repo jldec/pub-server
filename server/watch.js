@@ -20,7 +20,6 @@ module.exports = function watch(src, onEvent) {
 
     { depth:         src.depth || 1,
       ignoreInitial: true,
-      useFsEvents:   true,
       interval:      '1s' },
 
     src.watch);
