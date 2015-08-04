@@ -20,7 +20,7 @@ initOpts(function(err, opts) {
   opts.log.logger.noErrors = true;
 
   // get browserified generator plugins - avoid caching across directories
-  $.getScript('/pub/_generator-plugins.js?_=' + encodeURIComponent(opts.basedir))
+  $.getScript('./_generator-plugins.js?_=' + encodeURIComponent(opts.basedir))
   .fail(function(jqXHR) {
     opts.log(new Error(jqXHR.responseText));
   })

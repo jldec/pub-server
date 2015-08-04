@@ -54,8 +54,8 @@ opts.dir = cli.args[0] || '.';
 
 if (cli.port)                      { opts.port = cli.port; }
 if (cli.theme.length)              { opts.pkgs = cli.theme; }
-if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.relpaths)                  { opts.relPaths = true; }
+if (cli.outputPath)                { opts.outputs = { path:cli.outputPath, relPaths:opts.relPaths }; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
 if (cli.htmlOnly)                  { opts.htmlOnly = true; }
 if (cli.static.length)             { opts.staticPaths = cli.static; }

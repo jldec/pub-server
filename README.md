@@ -1,8 +1,17 @@
 ## pub-server
 
+http://jldec.github.io/pub-doc/
+
 **pub-server**, or **pub** for short, is a web publishing tool built with node and express.
 
-**pub** generates html from markdown files.
+**pub** generates html from markdown files. No database is needed.
+
+Components include
+- a static site generator
+- an editor
+- a web server
+
+The generator and editor run in the browser, enabling CMS-like editing with instant preview, even when the HTML output is published to a static web-host like Github.
 
 Start by using **pub** to preview your github README or other markdown files.
 Later you may want to use **pub** for a [presentation](https://github.com/jldec/pub-theme-shower-ribbon)
@@ -14,7 +23,6 @@ Running `pub` from the command line in your project folder will:
 - render them in your browser at http://localhost:3001/
 - watch the files for changes
 - automatically refresh your browser when you save a change from your favorite editor
-- use `pub -O` to generate html files without starting a server
 
 ![preview screen-shot](/images/screen1.png)
 
@@ -27,7 +35,7 @@ Running `pub` from the command line in your project folder will:
 npm install -g pub-server
 ```
 
-Windows support is coming - PRs welcome.
+OSX and Linux are working, Windows support is coming - PRs welcome.
 
 
 ### usage

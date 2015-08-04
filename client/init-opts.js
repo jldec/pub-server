@@ -21,7 +21,7 @@ var srcGithub = require('pub-src-github'); // dummy require for browserify
 module.exports = function initOpts(cb) {
   cb = u.onceMaybe(cb);
 
-  $.getJSON('/pub/_opts.json')
+  $.getJSON('./_opts.json')
   .fail(function(jqXHR) { cb(new Error(jqXHR.responseText)); })
   .done(function(respData) {
 
@@ -31,6 +31,12 @@ module.exports = function initOpts(cb) {
 
     // enable debug tracing on client
     dbg.enable(opts.dbg);
+
+    // auto-detect relPath assuming editor lives under /pub/
+    if (opts.staticHost) {
+      var relPath = u.parentHref(location.pathname, true);
+      if (relPath !== '/') { opts.relPath = relPath; }
+    }
 
     var ab = asyncbuilder(function(err) { cb(err, opts); });
 

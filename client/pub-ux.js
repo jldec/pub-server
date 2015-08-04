@@ -31,9 +31,6 @@ if (window.io) {
 
 $(function(){
 
-  var prefix = '/pub';
-  var $b;
-
   var style =
   { 'position':'fixed',
     'z-index':'200',
@@ -52,19 +49,32 @@ $(function(){
     'padding':'0 2px 0 5px',
     'cursor':'pointer' };
 
-  if (window.parent.location.href.match(new RegExp('.*?//[^/]*' + prefix + '/'))) {
+  var $b, relPath, contentHref, editorHref;
+
+  // TODO: fix this logic to support 'normal' urls ending in /pub/
+  if (window.parent.location.pathname.match(/\/pub\/$/)) {
     $.pubEditor = true;
     $b = $('<div class="pub-button" title="Close editor">Close</div>').css(style);
     $('body').prepend($b);
-    $b.on('click', function(){ window.parent.location = location.href; });
+    $b.on('click', function(){
+      contentHref = location.pathname + location.search + location.hash;
+      relPath = window.generator && window.generator.opts.relPath;
+      if (relPath && contentHref.slice(0, relPath.length) !== relPath) {
+        contentHref = relPath + contentHref;
+      }
+      window.parent.location = contentHref;
+    });
   }
   else {
     $.pubEditor = false;
+    // page param used in pub-preview.js to open editor on the proper page
     $b = $('<div class="pub-button" title="Edit">Edit</div>').css(style);
     $('body').prepend($b);
     $b.on('click', function(){
-      var lmatch = location.href.match(/(.*?\/\/[^\/]*)(\/[^\/]*)(.*)/);
-      location = lmatch[1] + prefix + lmatch[2] + lmatch[3];
+      contentHref = location.pathname + location.search + location.hash;
+      relPath = window.relPath || '.';
+      editorHref = relPath + '/pub/?page=' + encodeURIComponent(contentHref);
+      location = editorHref;
     });
   }
 
