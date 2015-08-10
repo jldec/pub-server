@@ -4,11 +4,8 @@
  *
 **/
 
-suite('pub-server test-statics');
+var test = require('tape');
 
-var should = require('should');
-var assert = require('assert');
-var deepdiff = require('deep-diff');
 var u = require('pub-util');
 var EventEmitter = require('events').EventEmitter;
 
@@ -98,14 +95,14 @@ runTest("index.html, index.htm",
 
 function runTest(name, staticPaths, expectedKeys, expectedFiles, expectedLogText, extraOpts) {
   expectedLogText = expectedLogText || ''
-  test(name, function(done) {
-    this.timeout(3000);
+  test(name, function(t) {
+    t.timeoutAfter(3000);
     var server = new EventEmitter();
     var actualLogText = '';
     var opts = {
       staticPaths: staticPaths,
       log: function() {
-// console.log.apply(console, arguments);
+        // console.log.apply(console, arguments);
         actualLogText += u.format.apply(this, arguments) + '\n';
       }
     };
@@ -114,24 +111,14 @@ function runTest(name, staticPaths, expectedKeys, expectedFiles, expectedLogText
     var statics = require('../server/serve-statics')(opts, function(err, file$) {
       var actualKeys = u.keys(file$);
       var actualFiles = u.pluck(file$, 'file');
-// console.log('keys:', actualKeys);
-// console.log('files:', actualFiles);
-      assertNoDiff(actualKeys, expectedKeys);
-      assertNoDiff(actualFiles, expectedFiles);
-      assertNoDiff(actualLogText, expectedLogText);
-      done();
+      // console.log('keys:', actualKeys);
+      // console.log('files:', actualFiles);
+      t.deepEqual(actualKeys, expectedKeys);
+      t.deepEqual(actualFiles, expectedFiles);
+      t.deepEqual(actualLogText, expectedLogText);
+      t.end();
     });
   });
-}
-
-function assertNoDiff(actual, expected, msg) {
-  var diff = deepdiff(actual, expected);
-  var maxdiff = 5;
-  if (diff) {
-    assert(false, 'deepDiff ' + (msg || '') + '\n'
-      + u.inspect(diff.slice(0,maxdiff), {depth:3})
-      + (diff.length > maxdiff ? '\n...(truncated)' : ''));
-  }
 }
 
 function noop(){}

@@ -32,10 +32,10 @@ module.exports = function initOpts(cb) {
     // enable debug tracing on client
     dbg.enable(opts.dbg);
 
-    // auto-detect relPath assuming editor lives under /pub/
+    // auto-detect staticRoot assuming editor lives under /pub/
     if (opts.staticHost) {
-      var relPath = u.parentHref(location.pathname, true);
-      if (relPath !== '/') { opts.relPath = relPath; }
+      var staticRoot = u.parentHref(location.pathname, true);
+      if (staticRoot !== '/') { opts.staticRoot = staticRoot; }
     }
 
     var ab = asyncbuilder(function(err) { cb(err, opts); });

@@ -3,6 +3,7 @@
  * browserify entry point
  * connect/disconnect socket.io and inject pub UI into dom
  *
+ * TODO: fix /pub/ button logic to handle non-pub urls ending in /pub/
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
 */
 
@@ -49,31 +50,31 @@ $(function(){
     'padding':'0 2px 0 5px',
     'cursor':'pointer' };
 
-  var $b, relPath, contentHref, editorHref;
+  var $b;
 
-  // TODO: fix this logic to support 'normal' urls ending in /pub/
   if (window.parent.location.pathname.match(/\/pub\/$/)) {
     $.pubEditor = true;
     $b = $('<div class="pub-button" title="Close editor">Close</div>').css(style);
     $('body').prepend($b);
     $b.on('click', function(){
-      contentHref = location.pathname + location.search + location.hash;
-      relPath = window.generator && window.generator.opts.relPath;
-      if (relPath && contentHref.slice(0, relPath.length) !== relPath) {
-        contentHref = relPath + contentHref;
+      var contentHref = location.pathname + location.search + location.hash;
+      var staticRoot = window.generator && window.generator.opts.staticRoot;
+      if (staticRoot && contentHref.slice(0, staticRoot.length) !== staticRoot) {
+        contentHref = staticRoot + contentHref;
       }
       window.parent.location = contentHref;
     });
   }
   else {
     $.pubEditor = false;
+    // logic supports static at root or not, or pub-server /pub/ editor
     // page param used in pub-preview.js to open editor on the proper page
     $b = $('<div class="pub-button" title="Edit">Edit</div>').css(style);
     $('body').prepend($b);
     $b.on('click', function(){
-      contentHref = location.pathname + location.search + location.hash;
-      relPath = window.relPath || '.';
-      editorHref = relPath + '/pub/?page=' + encodeURIComponent(contentHref);
+      var pubRef = window.pubRef || {};
+      var contentHref = (pubRef.href || location.pathname) + location.search + location.hash;
+      var editorHref = (pubRef.relPath || '') + '/pub/?page=' + encodeURIComponent(contentHref);
       location = editorHref;
     });
   }

@@ -2,34 +2,15 @@
 
 http://jldec.github.io/pub-doc/
 
-**pub-server**, or **pub** for short, is a web publishing tool built with node and express.
+**pub-server**, or **pub** for short is an HTML generator+editor entirely written in javascript.
 
-**pub** generates html from markdown files. No database is needed.
+Notably, the generator+editor can publish itself, together with the HTML, CSS etc., on any static web hosting service like [Github pages]().
 
-Components include
-- a static site generator
-- an editor
-- a web server
-
-The generator and editor run in the browser, enabling CMS-like editing with instant preview, even when the HTML output is published to a static web-host like Github.
-
-Start by using **pub** to preview your github README or other markdown files.
-Later you may want to use **pub** for a [presentation](https://github.com/jldec/pub-theme-shower-ribbon)
-or website with a theme of your choice.
-
-Running `pub` from the command line in your project folder will:
-
-- find all the markdown files there
-- render them in your browser at http://localhost:3001/
-- watch the files for changes
-- automatically refresh your browser when you save a change from your favorite editor
-
-![preview screen-shot](/images/screen1.png)
-
+Since the generator+editor runs in-browser, non-technical users can edit their markdown "source" fragments, and instantly preview the generated HTML, all without first installing pub-server themselves.
 
 ### installation
 
-**pub** requires node.js or io.js.
+using **pub-server** requires node.js or io.js.
 
 ``` bash
 npm install -g pub-server
@@ -42,14 +23,14 @@ OSX and Linux are working, Windows support is coming - PRs welcome.
 
 `pub` (with no options) serves `*.md` in the current directory or looks for `pub-config.js`.
 
-`pub -O` generates .html files and copy a set of static files to `./out`.
+`pub -O` generates .html and other static files (including generator + editor) to `./out`.
 
 `pub -S` serves only static files.
 
 `pub -h` shows the usage info below:
 
 ```
-pub-server v1.7.23
+pub-server v1.8.0
 
 usage: pub [opts] [dir]
 opts:
@@ -59,7 +40,7 @@ opts:
   -o, --output-path <dir>  output dir [./out]
   -O, --output-only        output html, scripts, static files and exit
   -G, --html-only          output generated html files and exit
-  -r, --relpaths           output with relative paths
+  -r, --root <prefix>      generate /prefix urls, "." means path relative
   -s, --static <dir>       static dir, repeatable, supports <dir>,<route>
   -S, --static-only <dir>  serve only static files from <dir>
   -m, --md-fragments       use markdown headers as fragments
@@ -73,29 +54,6 @@ opts:
   -D, --debug              node --debug (server and client-side)
   -B, --debug-brk          node --debug-brk (server and client-side)
 ```
-
-### editor with instant preview
-
-**pub-editor** was designed for self-service editing online.
-
-You can also use it to edit your markdown when pub is running locally.
-
-- click on `Edit` at the top right
-- this prepends `/pub` to the url which opens the page in the editor
-- adjust the split between the panes by dragging the separator at the top
-- edit the markdown on the left, and see the result instantly in the preview on the right
-- **NOTE: your changes will be saved immediately, overwriting the file**
-- use git to validate the changes before committing
-
-![editor screen-shot](/images/screen3.png)
-
-
-### packages and themes
-
-- **pub-server** can be extended with npm packages containing plugins and themes
-- the default theme for pub-server is [pub-theme-doc](https://github.com/jldec/pub-theme-doc)
-- the editor is [pub-pkg-editor](https://github.com/jldec/pub-pkg-editor)
-
 
 ### credits
 

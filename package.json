@@ -1,6 +1,6 @@
 {
   "name": "pub-server",
-  "version": "1.7.23",
+  "version": "1.8.0",
   "description": "markdown site generator, web server, and editor",
   "main": "server.js",
   "preferGlobal": true,
@@ -20,33 +20,31 @@
     "mime": "^1.3.4",
     "minifyify": "^7.0.2",
     "mkdirp": "^0.5.1",
-    "pub-generator": "^1.10.5",
-    "pub-pkg-editor": "^1.4.0",
+    "pub-generator": "^1.11.0",
+    "pub-pkg-editor": "^1.5.0",
     "pub-pkg-font-awesome": "^2.0.2",
     "pub-pkg-font-open-sans": "^1.4.0",
-    "pub-pkg-google-oauth": "^1.0.3",
+    "pub-pkg-google-oauth": "^1.0.4",
     "pub-pkg-highlight": "^0.2.4",
     "pub-pkg-jquery": "^1.11.3",
     "pub-pkg-seo": "^1.0.1",
-    "pub-resolve-opts": "^1.6.6",
-    "pub-serve-sessions": "^1.0.1",
-    "pub-src-fs": "^1.3.3",
-    "pub-src-github": "^1.2.3",
-    "pub-src-http": "^1.0.3",
-    "pub-src-redis": "^1.1.8",
+    "pub-resolve-opts": "^1.6.7",
+    "pub-serve-sessions": "^1.0.2",
+    "pub-src-fs": "^1.3.4",
+    "pub-src-github": "^1.2.4",
+    "pub-src-http": "^1.0.4",
+    "pub-src-redis": "^1.1.10",
     "pub-theme-doc": "^1.1.7",
-    "pub-util": "^1.5.0",
+    "pub-util": "^1.5.1",
     "send": "^0.13.0",
     "socket.io": "^1.3.5",
     "through2": "^2.0.0"
   },
   "scripts": {
-    "test": "mocha --ui qunit"
+    "test": "tape test/*.js"
   },
   "devDependencies": {
-    "mocha": "^2.2.4",
-    "should": "^6.0.1",
-    "deep-diff": "^0.3.1"
+    "tape": "^4.0.3"
   },
   "keywords": [
     "markdown",

@@ -31,7 +31,7 @@ cli
   .option('-o, --output-path <dir>', 'output dir [./out]')
   .option('-O, --output-only',       'output html, scripts, static files and exit')
   .option('-G, --html-only',         'output generated html files and exit')
-  .option('-r, --relpaths',          'output with relative paths')
+  .option('-r, --root <prefix>',     'generate /prefix urls, "." means path relative')
   .option('-s, --static <dir>',      'static dir, repeatable, supports <dir>,<route>', collectStaticPaths, [])
   .option('-S, --static-only <dir>', 'serve only static files from <dir>', collectStaticPaths, [])
   .option('-m, --md-fragments',      'use markdown headers as fragments')
@@ -54,8 +54,9 @@ opts.dir = cli.args[0] || '.';
 
 if (cli.port)                      { opts.port = cli.port; }
 if (cli.theme.length)              { opts.pkgs = cli.theme; }
-if (cli.relpaths)                  { opts.relPaths = true; }
-if (cli.outputPath)                { opts.outputs = { path:cli.outputPath, relPaths:opts.relPaths }; }
+if (cli.root === '.')              { opts.relPaths = true; }
+else if (cli.root)                 { opts.staticRoot = cli.root; }
+if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
 if (cli.htmlOnly)                  { opts.htmlOnly = true; }
 if (cli.static.length)             { opts.staticPaths = cli.static; }
