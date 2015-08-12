@@ -25,7 +25,7 @@ OSX and Linux are working, Windows support is coming - PRs welcome.
 
 ### usage
 
-- `pub` (with no options) serves `*.md` in the current directory or looks for a `pub-config.js`. The default theme is useful for previewing README.md files like this one.
+- `pub` (with no options) serves `*.md` in the current directory or looks for a `pub-config.js`. The default theme is useful for previewing Github README.md files like this one. The server will watch for changes and update http://localhost:3001/ whenever markdown files or CSS or other static files are saved.
 
 - `pub -O` generates .html and other static files (including generator + editor) to `./out`.
 
