@@ -1,12 +1,16 @@
 ## pub-server
 
-http://jldec.github.io/pub-doc/
-
 **pub-server**, or **pub** for short is an HTML generator+editor entirely written in javascript.
 
-Notably, the generator+editor can publish itself, together with the HTML, CSS etc., on any static web hosting service like [Github pages]().
+The generator+editor runs in-browser, allowing non-technical users to edit their markdown _source_ text fragments, and instantly preview the generated HTML, without first installing pub-server themselves.
 
-Since the generator+editor runs in-browser, non-technical users can edit their markdown "source" fragments, and instantly preview the generated HTML, all without first installing pub-server themselves.
+When you publish onto a static hosting service like [Github pages](https://pages.github.com/), you can include the generator+editor together with the published HTML.
+
+To see this in action, check out the docs at http://jldec.github.io/pub-doc/. The editor appears when you click on the [edit](http://jldec.github.io/pub-doc/pub/?page=%2F) button at the top right. Feel free to play around - in this instance, your changes will not be recorded. For a different example with a presentation theme, see [here](http://jldec.github.io/roadmap/pub/?page=%2Fde%2F%3Ffull%23fragment-1).
+
+_NOTE: This editor will be much improved, including wysiwig markdown features, once [marijnh](https://github.com/marijnh/) releases [ProseMirror](https://github.com/ProseMirror/prosemirror). Please support him [here](https://www.indiegogo.com/projects/prosemirror/#/story)._
+
+![](/images/screen.png)
 
 ### installation
 
@@ -21,16 +25,16 @@ OSX and Linux are working, Windows support is coming - PRs welcome.
 
 ### usage
 
-`pub` (with no options) serves `*.md` in the current directory or looks for `pub-config.js`.
+- `pub` (with no options) serves `*.md` in the current directory or looks for a `pub-config.js`. The default theme is useful for previewing README.md files like this one.
 
-`pub -O` generates .html and other static files (including generator + editor) to `./out`.
+- `pub -O` generates .html and other static files (including generator + editor) to `./out`.
 
-`pub -S` serves only static files.
+- `pub -S <dir>` serves static files from any directory. It will mimic the behavior of Github Pages, looking for index.html files in folders, and redirecting from /folder-name to /folder-name/
 
-`pub -h` shows the usage info below:
+- `pub -h` shows the usage info below:
 
 ```
-pub-server v1.8.0
+pub-server v1.8.1
 
 usage: pub [opts] [dir]
 opts:

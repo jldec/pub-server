@@ -134,6 +134,7 @@ module.exports = function serveStatics(opts, cb) {
     if (!src) {
       sp.depth = sp.depth || 5;
       sp.maxAge = 'maxAge' in sp ? sp.maxAge : '10m';
+      sp.includeBinaries = true;
       src = sp.src = fsbase(sp);
       if (src.isfile()) { sp.depth = 1; }
       sp.sendOpts = u.merge(
