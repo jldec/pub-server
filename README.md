@@ -15,6 +15,8 @@ _NOTE: This editor will be much improved, including wysiwig markdown features, o
 
 ![](/images/screen.png)
 
+![](/images/screen2.png)
+
 ### installation
 
 using **pub-server** requires node.js or io.js.
