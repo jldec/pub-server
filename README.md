@@ -9,13 +9,15 @@ When you publish onto a static hosting service like [Github pages](https://pages
 To see this in action, check out the docs at http://jldec.github.io/pub-doc/. The editor appears when you click on the [edit](http://jldec.github.io/pub-doc/pub/?page=%2F) button at the top right.
 Feel free to play around - in this instance, your changes will not be recorded.
 
-For a different example with a [presentation theme](https://github.com/jldec/pub-sample-deck), see [here](http://jldec.github.io/roadmap/pub/?page=%2Fde%2F%3Ffull%23fragment-1). And here is [another example](http://about.pubblz.com/) with a [flexbox design](https://github.com/jldec/pub-theme-brief). Both are hosted on Github Pages (including the editor).
+Other examples include a [presentation theme](https://github.com/jldec/pub-sample-deck), a [flexbox design](https://github.com/jldec/pub-theme-brief), and a [blog](http://blog.pubblz.com/)
 
 _NOTE: This editor will be much improved, including wysiwig markdown features, once [marijnh](https://github.com/marijnh/) releases [ProseMirror](https://github.com/ProseMirror/prosemirror). Please support him [here](https://www.indiegogo.com/projects/prosemirror/#/story)._
 
-![](/images/screen.png)
+![](/screenshots/screen1.png)
 
-![](/images/screen2.png)
+![](/screenshots/screen.png)
+
+![](/screenshots/screen2.png)
 
 ### installation
 
@@ -39,7 +41,7 @@ OSX and Linux are working, Windows support is coming - PRs welcome.
 - `pub -h` shows the usage info below:
 
 ```
-pub-server v1.8.1
+pub-server v1.8.2
 
 usage: pub [opts] [dir]
 opts:
