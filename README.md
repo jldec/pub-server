@@ -41,7 +41,7 @@ OSX and Linux are working, Windows support is coming - PRs welcome.
 - `pub -h` shows the usage info below:
 
 ```
-pub-server v1.8.2
+pub-server v1.8.3
 
 usage: pub [opts] [dir]
 opts:
@@ -58,7 +58,8 @@ opts:
   -C, --config             show config and exit
   -I, --ignore-config      ignore pub-config file
   -P, --pages              show pages and templates and exit
-  -W, --no-watch           don't watch for changes
+  -w, --watch-pkgs         also watch inside packages
+  -W, --no-watch           disable watcher entirely
   -K, --no-sockets         no websockets
   -E, --no-editor          website only, no editor
   -d, --dbg                enable scriptmaps and client-side debug traces

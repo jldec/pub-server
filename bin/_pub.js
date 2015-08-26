@@ -38,7 +38,8 @@ cli
   .option('-C, --config',            'show config and exit')
   .option('-I, --ignore-config',     'ignore pub-config file')
   .option('-P, --pages',             'show pages and templates and exit')
-  .option('-W, --no-watch',          'don\'t watch for changes')
+  .option('-w, --watch-pkgs',        'also watch inside packages')
+  .option('-W, --no-watch',          'disable watcher entirely')
   .option('-K, --no-sockets',        'no websockets')
   .option('-E, --no-editor',         'website only, no editor')
   .option('-d, --dbg',               'enable scriptmaps and client-side debug traces')
@@ -64,6 +65,7 @@ if (cli.staticOnly.length)         { opts.staticOnly = cli.staticOnly; }
 if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
 if (cli.ignoreConfig)              { opts.ignoreConfig = true; }
 if (cli.pages)                     { opts.logPages = true; }
+if (cli.watch && cli.watchPkgs)    { opts.watchPkgs = true; }
 if (!cli.watch || cli.outputOnly || cli.htmlOnly) { opts['no-watch'] = true; }
 if (!cli.sockets || cli.outputOnly) { opts['no-sockets'] = true; }
 if (cli.editor && !cli.staticOnly.length) { opts.editor = true; }
