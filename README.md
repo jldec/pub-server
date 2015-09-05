@@ -1,4 +1,4 @@
-## pub-server
+# pub-server
 
 **pub-server**, or **pub** for short is an HTML generator+editor entirely written in javascript.
 
@@ -11,7 +11,35 @@ Feel free to play around - in this instance, your changes will not be recorded.
 
 Other examples include a [presentation theme](https://github.com/jldec/pub-sample-deck), a [flexbox design](https://github.com/jldec/pub-theme-brief), and a [blog](http://blog.pubblz.com/)
 
-_NOTE: This editor will be much improved, including wysiwig markdown features, once [marijnh](https://github.com/marijnh/) releases [ProseMirror](https://github.com/ProseMirror/prosemirror). Please support him [here](https://www.indiegogo.com/projects/prosemirror/#/story)._
+## roadmap
+
+**pub-server** is usable today by anyone comfortable using Github and command line tools, to publish high-quality HTML content with custom designs.
+
+### near-term backlog
+- Improved documentation
+- Fix editor to work on mobile devices
+- Self-service Github Pages workflow with save and re-publish
+- Basic form processing api
+- Dropbox interface for images
+- Single-page website theme
+- More complete blog theme
+
+### medium-term backlog
+- Single-file pub format with integrated pub-config
+- Photo-centric consumer publishing workflow
+- Private publishing
+- Atom editor plugin for designers
+- Windows support
+- npm v3 support
+- HTTPS hosting
+
+### longer-term backlog
+- WYSIWYG editor based on Prosemirror
+- v2 architecture: React/Redux + Webpack
+- Modern designs for presentations with vector graphics and data-integration
+- Next-gen interactive designs, games, animations
+- Online editing of javascript, html, css/less
+
 
 ![](/screenshots/screen1.png)
 
@@ -19,7 +47,7 @@ _NOTE: This editor will be much improved, including wysiwig markdown features, o
 
 ![](/screenshots/screen2.png)
 
-### installation
+## installation
 
 using **pub-server** requires node.js or io.js.
 
@@ -30,7 +58,7 @@ npm install -g pub-server
 OSX and Linux are working, Windows support is coming - PRs welcome.
 
 
-### usage
+## usage
 
 - `pub` (with no options) serves `*.md` in the current directory or looks for a `pub-config.js`. The default theme is useful for previewing Github README.md files like this one. The server will watch for changes and update http://localhost:3001/ whenever markdown files or CSS or other static files are saved.
 
@@ -67,7 +95,7 @@ opts:
   -B, --debug-brk          node --debug-brk (server and client-side)
 ```
 
-### credits
+## credits
 
 Major dependencies include:
 
