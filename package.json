@@ -1,6 +1,6 @@
 {
   "name": "pub-server",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "description": "markdown site generator, web server, and editor",
   "main": "server.js",
   "preferGlobal": true,
@@ -37,7 +37,7 @@
     "pub-theme-doc": "^1.1.7",
     "pub-util": "^1.5.1",
     "send": "^0.13.0",
-    "socket.io": "^1.3.5",
+    "socket.io": "gsklee/socket.io",
     "through2": "^2.0.0"
   },
   "scripts": {
