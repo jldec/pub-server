@@ -2,9 +2,9 @@
 
 **pub-server**, or **pub** for short is an HTML generator+editor entirely written in javascript.
 
-The generator+editor runs in-browser, allowing non-technical users to edit their markdown _source_ text fragments, and instantly preview the generated HTML, without first installing pub-server themselves.
+For users with node.js, pub-server provides a simple command-line utility which can render an HTML website from markdown in any directory. The generated output uses npm-installable themes and is fully customizable.
 
-When you publish onto a static hosting service like [Github pages](https://pages.github.com/), you can include the generator+editor together with the published HTML.
+The generator+editor can also run in-browser, allowing non-technical users to edit and instantly preview the generated HTML, without first installing pub-server themselves.
 
 To see this in action, check out the docs at http://jldec.github.io/pub-doc/. The editor appears when you click on the [edit](http://jldec.github.io/pub-doc/pub/?page=%2F) button at the top right.
 Feel free to play around - in this instance, your changes will not be recorded.
