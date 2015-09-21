@@ -31,7 +31,7 @@ module.exports = function serveScripts(opts, server) {
   // expose build-bundle for output to file
   browserify.buildBundle = require('browserify-middleware/lib/build-bundle.js');
 
-  // if (!opts.dbg) { browserify.settings.mode = 'production'; }
+  if (!opts.dbg) { browserify.settings.mode = 'production'; }
 
   browserify.settings( { ignore: ['request', 'request-debug', 'graceful-fs', 'resolve', 'osenv', 'tmp'],
                          ignoreMissing: false } );
