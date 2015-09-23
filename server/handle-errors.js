@@ -41,7 +41,7 @@ module.exports = function handleErrors(server) {
   function notFound(req, res, next) {
 
     var ext = path.extname(req.path);
-    if (!ext || /\.htm|\.html/i.test(ext)) return error(404, req, res);
+    if ((!ext || /\.htm|\.html/i.test(ext)) && !u.size(req.query)) return error(404, req, res);
 
     debug('404 %s', req.originalUrl);
     res.status(404).end();
