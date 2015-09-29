@@ -69,7 +69,7 @@ OSX and Linux are working, Windows support is coming - PRs welcome.
 - `pub -h` shows the usage info below:
 
 ```
-pub-server v1.9.2
+pub-server v1.9.3
 
 usage: pub [opts] [dir]
 opts:
