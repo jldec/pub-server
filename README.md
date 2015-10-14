@@ -13,12 +13,12 @@ Other examples include a [presentation theme](https://github.com/jldec/pub-sampl
 
 ## roadmap
 
-**pub-server** is usable today by anyone comfortable using Github and command line tools, to publish high-quality HTML content with custom designs.
+**pub-server** is usable today by anyone comfortable using GitHub and command line tools, to publish high-quality HTML content with custom designs.
 
 ### near-term backlog
 - Improved documentation
 - Fix editor to work on mobile devices
-- Self-service Github Pages workflow with save and re-publish
+- Self-service GitHub Pages workflow with save and re-publish
 - Basic form processing api
 - Dropbox interface for images
 - Single-page website theme
@@ -60,11 +60,11 @@ OSX and Linux are working, Windows support is coming - PRs welcome.
 
 ## usage
 
-- `pub` (with no options) serves `*.md` in the current directory or looks for a `pub-config.js`. The default theme is useful for previewing Github README.md files like this one. The server will watch for changes and update http://localhost:3001/ whenever markdown files or CSS or other static files are saved.
+- `pub` (with no options) serves `*.md` in the current directory or looks for a `pub-config.js`. The default theme is useful for previewing GitHub README.md files like this one. The server will watch for changes and update http://localhost:3001/ whenever markdown files or CSS or other static files are saved.
 
 - `pub -O` generates .html and other static files (including generator + editor) to `./out`.
 
-- `pub -S <dir>` serves static files from any directory. It will mimic the behavior of Github Pages, looking for index.html files in folders, and redirecting from /folder-name to /folder-name/
+- `pub -S <dir>` serves static files from any directory. It will mimic the behavior of GitHub Pages, looking for index.html files in folders, and redirecting from /folder-name to /folder-name/
 
 - `pub -h` shows the usage info below:
 

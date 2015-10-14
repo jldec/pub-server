@@ -137,7 +137,7 @@ module.exports = function serveStatics(opts, cb) {
       sp.includeBinaries = true;
       src = sp.src = fsbase(sp);
       if (src.isfile()) { sp.depth = 1; }
-      sp.sendOpts = u.merge(
+      sp.sendOpts = u.merge({},
         u.pick(sp, 'maxAge', 'lastModified', 'etag'),
         { dotfiles:'ignore',
           index:false,      // handled at this level
@@ -247,9 +247,14 @@ module.exports = function serveStatics(opts, cb) {
       cb(result)
     });
 
-    var filterRe = new RegExp('^/(admin|server' +
-                              (opts.editor ? '' : '|pub') +
-                              ')/');
+    var omit = defaultOutput.omitRoutes;
+    if (omit && !u.isArray(omit)) { omit = [omit]; }
+
+    // TODO: re-use similar filter in generator.output
+    var filterRe = new RegExp('^(/admin/|/server/' +
+                (opts.editor ? '' : '|/pub/') +
+                       (omit ? '|' + u.map(omit, u.escapeRegExp).join('|') : '') +
+                              ')');
 
     u.each(self.file$, function(spo, reqPath) {
       if (filterRe.test(reqPath)) return done();

@@ -16,7 +16,7 @@ var debug = dbg('pub:generator');
 var asyncbuilder = require('asyncbuilder');
 var u = require('pub-util');
 
-var srcGithub = require('pub-src-github'); // dummy require for browserify
+var srcGitHub = require('pub-src-github'); // dummy require for browserify
 
 module.exports = function initOpts(cb) {
   cb = u.onceMaybe(cb);

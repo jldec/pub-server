@@ -24,6 +24,7 @@ cli.helpInformation = function() { return '\n' +
 }
 
 var u = require('pub-util');
+var inspect = require('util').inspect;
 
 cli
   .option('-p, --port <port>',       'server port [3001]')
@@ -73,7 +74,7 @@ if (cli.dbg)                       { opts.dbg = process.env.DEBUG || '*'; opts['
 
 var server = require('../server')(opts);
 
-if (cli.config) return console.log(u.inspect(u.omit(opts, 'source$', 'output$'), {depth:2, colors:true}));
+if (cli.config) return console.log(inspect(u.omit(opts, 'source$', 'output$'), {depth:2, colors:true}));
 
 server.run();
 

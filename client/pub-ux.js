@@ -34,7 +34,7 @@ $(function(){
 
   var style =
   { 'position':'fixed',
-    'z-index':'200',
+    'z-index':'9999999',
     'opacity':'0.5',
     'font-family': '"Helvetica Neue",Tahoma,Arial,sans-serif',
     'font-weight': '400',
