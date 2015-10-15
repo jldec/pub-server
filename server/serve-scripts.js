@@ -142,7 +142,7 @@ module.exports = function serveScripts(opts, server) {
     });
 
     var out = fspath.join(dest.path, '/pub/_opts.json');
-    fs.outputJson(out, serializeOpts(generator, true), function(err) {
+    fs.outputJson(out, serializeOpts(generator, true, dest), function(err) {
       log(err || 'output opts: %s', out);
     });
   }
@@ -169,11 +169,14 @@ module.exports = function serveScripts(opts, server) {
     return s;
   }
 
-  function serializeOpts(generator, toStatic) {
+  function serializeOpts(generator, toStatic, outputDest) {
     var sOpts = u.omit(opts, 'output$', 'source$', 'log', 'session');
 
     // provide for detection of static hosted editor
     if (toStatic) { sOpts.staticHost = true; }
+
+    // pass output.fqImages -> static opts for use in static editor/generator
+    if (outputDest && outputDest.fqImages) { sOpts.fqImages = outputDest.fqImages; }
 
     sOpts.staticPaths = u.map(opts.staticPaths, function(staticPath) {
       return u.omit(staticPath, 'files', 'src');
