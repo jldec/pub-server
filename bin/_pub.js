@@ -35,7 +35,6 @@ cli
   .option('-r, --root <prefix>',     'generate /prefix urls, "." means path relative')
   .option('-s, --static <dir>',      'static dir, repeatable, supports <dir>,<route>', collectStaticPaths, [])
   .option('-S, --static-only <dir>', 'serve only static files from <dir>', collectStaticPaths, [])
-  .option('-m, --md-fragments',      'use markdown headers as fragments')
   .option('-C, --config',            'show config and exit')
   .option('-I, --ignore-config',     'ignore pub-config file')
   .option('-P, --pages',             'show pages and templates and exit')
@@ -43,6 +42,7 @@ cli
   .option('-W, --no-watch',          'disable watcher entirely')
   .option('-K, --no-sockets',        'no websockets')
   .option('-E, --no-editor',         'website only, no editor')
+  .option('-m, --minify',            'minify scripts')
   .option('-d, --dbg',               'enable scriptmaps and client-side debug traces')
   .option('-D, --debug',             'node --debug (server and client-side)')
   .option('-B, --debug-brk',         'node --debug-brk (server and client-side)');
@@ -71,6 +71,7 @@ if (!cli.watch || cli.outputOnly || cli.htmlOnly) { opts['no-watch'] = true; }
 if (!cli.sockets || cli.outputOnly) { opts['no-sockets'] = true; }
 if (cli.editor && !cli.staticOnly.length) { opts.editor = true; }
 if (cli.dbg)                       { opts.dbg = process.env.DEBUG || '*'; opts['no-timeouts'] = true; }
+if (cli.minify && !cli.dbg)        { opts.minify = true; }
 
 var server = require('../server')(opts);
 

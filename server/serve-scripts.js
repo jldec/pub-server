@@ -16,6 +16,7 @@ var u = require('pub-util');
 var through = require('through2');
 var fspath = require('path');
 var fs = require('fs-extra');
+var babelify = require('babelify');
 
 module.exports = function serveScripts(opts, server) {
 
@@ -32,7 +33,7 @@ module.exports = function serveScripts(opts, server) {
   browserify.buildBundle = require('browserify-middleware/lib/build-bundle.js');
 
   /* browsrify pregen with production is slow */
-  if (opts.outputOnly && !opts.dbg) { browserify.settings.mode = 'production'; }
+  if ((opts.outputOnly || opts.minify) && !opts.dbg) { browserify.settings.mode = 'production'; }
 
   browserify.settings( { ignore: ['request', 'request-debug', 'graceful-fs', 'resolve', 'osenv', 'tmp'],
                          ignoreMissing: false } );
@@ -141,10 +142,12 @@ module.exports = function serveScripts(opts, server) {
       bundler.bundle().pipe(ws);
     });
 
-    var out = fspath.join(dest.path, '/pub/_opts.json');
-    fs.outputJson(out, serializeOpts(generator, true, dest), function(err) {
-      log(err || 'output opts: %s', out);
-    });
+    if (opts.editor) {
+      var out = fspath.join(dest.path, '/pub/_opts.json');
+      fs.outputJson(out, serializeOpts(generator, true, dest), function(err) {
+        log(err || 'output opts: %s', out);
+      });
+    }
   }
 
   // browserify transform for sending plugins
