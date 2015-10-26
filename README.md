@@ -1,6 +1,15 @@
-# pub-server
+
+# pub-server <br>
+[![](/images/run2.jpg)](https://jldec.github.io/pub-doc/)
 
 **pub-server**, or **pub** for short is an HTML generator+editor entirely written in javascript.
+
+The following use-cases are supported
+
+- Command-line tool for generating static websites
+- Web server for previewing generated HTML locally
+- Web server deployed on a PaaS like Heroku
+
 
 For users with node.js, pub-server provides a simple command-line utility which can render an HTML website from markdown in any directory. The generated output uses npm-installable themes and is fully customizable.
 
@@ -16,7 +25,7 @@ Other examples include a [presentation theme](https://github.com/jldec/pub-sampl
 **pub-server** is usable today by anyone comfortable using GitHub and command line tools, to publish high-quality HTML content with custom designs.
 
 ### near-term backlog
-- Improved documentation
+- ~~Improved documentation~~ _(better doc published 2015-10-26)_
 - Fix editor to work on mobile devices
 - Self-service GitHub Pages workflow with save and re-publish
 - Basic form processing api
