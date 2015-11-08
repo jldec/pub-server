@@ -10,7 +10,7 @@
 
 
 
-var debug = require('debug')('pub:server:sockets');
+var debug = require('debug')('pub:sockets');
 var u = require('pub-util');
 
 module.exports = function serveSockets(server) {
@@ -35,4 +35,3 @@ module.exports = function serveSockets(server) {
     function emitReload() { socket.emit('reload'); }
   });
 }
-

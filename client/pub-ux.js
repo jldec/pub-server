@@ -28,7 +28,7 @@ if (window.io) {
     socket.disconnect();
   })
 
-}
+} else console.log('no socket.io')
 
 $(function(){
 

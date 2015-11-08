@@ -11,7 +11,7 @@
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
  */
 
-var debug = require('debug')('pub:server:scripts');
+var debug = require('debug')('pub:scripts');
 var u = require('pub-util');
 var through = require('through2');
 var fspath = require('path');
@@ -45,6 +45,7 @@ module.exports = function serveScripts(opts, server) {
     var o = {
       route: script.route,
       path:  script.path,
+      delay: script.delay,
       opts:  u.omit(script, 'path', 'route', 'inject', 'maxAge')
     }
     if ('maxAge' in script) { o.opts.cache = script.maxAge || 'dynamic'; }
@@ -82,7 +83,17 @@ module.exports = function serveScripts(opts, server) {
 
     // route browserscripts, including builtins
     u.each(self.scripts, function(script) {
-      app.get(script.route, browserify(script.path, script.opts));
+      var handler = browserify(script.path, script.opts);
+      if (script.delay) {
+        var delayed = function(req, res) {
+          debug(req.path, 'waiting', script.delay);
+          setTimeout(function() {
+            debug(req.path, 'done waiting', script.delay);
+            handler(req, res);
+          }, u.ms(script.delay));
+        }
+      }
+      app.get(script.route, delayed || handler);
     });
 
     // editor api

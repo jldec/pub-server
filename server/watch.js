@@ -16,7 +16,7 @@ module.exports = function watch(src, onEvent) {
 
   var wDir = src.glob ? path.join(src.path, src.glob) : src.path;
 
-  var wOpts = u.merge({},
+  var wOpts = u.assign(
 
     { depth:         src.depth || 1,
       ignoreInitial: true,

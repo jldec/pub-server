@@ -106,7 +106,7 @@ function runTest(name, staticPaths, expectedKeys, expectedFiles, expectedLogText
         actualLogText += u.format.apply(this, arguments) + '\n';
       }
     };
-    if (extraOpts) { opts = u.extend(opts, extraOpts); }
+    if (extraOpts) { u.assign(opts, extraOpts); }
     server.app = { use: noop, get: noop };
     var statics = require('../server/serve-statics')(opts, function(err, file$) {
       var actualKeys = u.keys(file$);

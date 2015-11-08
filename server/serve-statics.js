@@ -137,7 +137,7 @@ module.exports = function serveStatics(opts, cb) {
       sp.includeBinaries = true;
       src = sp.src = fsbase(sp);
       if (src.isfile()) { sp.depth = 1; }
-      sp.sendOpts = u.merge({},
+      sp.sendOpts = u.assign(
         u.pick(sp, 'maxAge', 'lastModified', 'etag'),
         { dotfiles:'ignore',
           index:false,      // handled at this level
@@ -229,7 +229,11 @@ module.exports = function serveStatics(opts, cb) {
 
     debug('static %s%s', reqPath, (reqPath !== spo.file ? ' -> ' + spo.file : ''));
 
-    send(req, spo.file, spo.sp.sendOpts).pipe(res);
+    var doit = function() { send(req, spo.file, spo.sp.sendOpts).pipe(res); }
+
+    if (spo.sp.delay) return u.delay(doit, u.ms(spo.sp.delay));
+
+    doit();
   }
 
   // copy static files to defaultOutput preserving reqPath routes

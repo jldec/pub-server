@@ -1,4 +1,9 @@
 ##### Oct 24 2015 v1.9.14
+- update all dependencies
+- test with npm v3.x and node v5.x
+- small fixes for font smoothing, text size adjust, use of `_.assign`
+
+##### Oct 24 2015 v1.9.14
 - compose CHANGELOG.md
 
 ##### Oct 23 2015 v1.9.13
