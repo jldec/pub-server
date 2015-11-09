@@ -1,7 +1,10 @@
-##### Oct 24 2015 v1.9.14
+##### Nov 8 2015 v1.9.16
+- fix ./node_modules/... paths in pub-config with npm3
+
+##### Nov 8 2015 v1.9.15
 - update all dependencies
-- test with npm v3.x and node v5.x
-- small fixes for font smoothing, text size adjust, use of `_.assign`
+- start testing with npm v3.x and node v5.x
+- small fixes for font smoothing, text size adjust, prefer `_.assign`
 
 ##### Oct 24 2015 v1.9.14
 - compose CHANGELOG.md
