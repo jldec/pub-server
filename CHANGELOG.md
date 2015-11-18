@@ -1,3 +1,7 @@
+##### Nov 17 2015 v1.9.17
+- remove generator dependency on marked-images
+- fix relPath bug with generated {{{image}}} links
+
 ##### Nov 8 2015 v1.9.16
 - fix ./node_modules/... paths in pub-config with npm3
 
