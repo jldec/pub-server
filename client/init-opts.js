@@ -20,8 +20,8 @@ var srcGitHub = require('pub-src-github'); // dummy require for browserify
 
 module.exports = function initOpts(cb) {
   cb = u.onceMaybe(cb);
-
-  $.getJSON('./_opts.json')
+console.log(location.pathname)
+  $.getJSON(pubRef.relPath + '/pub/_opts.json')
   .fail(function(jqXHR) { cb(new Error(jqXHR.responseText)); })
   .done(function(respData) {
 
@@ -32,11 +32,9 @@ module.exports = function initOpts(cb) {
     // enable debug tracing on client
     dbg.enable(opts.dbg);
 
-    // auto-detect staticRoot assuming editor lives under /pub/
-    if (opts.staticHost) {
-      var staticRoot = u.parentHref(location.pathname, true);
-      if (staticRoot !== '/') { opts.staticRoot = staticRoot; }
-    }
+    // auto-infer staticRoot
+    opts.staticRoot = location.pathname.slice(0,location.pathname.length - pubRef.href.length);
+    debug('opts.staticRoot: "' + opts.staticRoot + '"');
 
     var ab = asyncbuilder(function(err) { cb(err, opts); });
 

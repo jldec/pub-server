@@ -8,10 +8,12 @@ var watch = require('./watch');
 
 module.exports = function watchSources(generator) {
   var opts = generator.opts;
+  var log = opts.log;
 
   opts.sources.forEach(function(src) {
     if (src.watch && !opts['no-watch']) {
-      watch(src, function() {
+      watch(src, function(evt, path) {
+        log('source %s %s', evt, path);
         src._reloadFromSource = true;
         generator.reload();
       });

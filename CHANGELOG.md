@@ -1,3 +1,10 @@
+##### Nov 22 2015 v1.9.18
+- add pub-pager plugin to package.json
+- NOTE: pub-pager is not compatible with pub-pkg-editor (yet)
+- correct staticRoot computation in initOpts
+- emit log events when watcher detects static or source changes
+- debug pub:server:watch now called debug pub:watch
+
 ##### Nov 17 2015 v1.9.17
 - remove generator dependency on marked-images
 - fix relPath bug with generated {{{image}}} links

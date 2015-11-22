@@ -48,7 +48,7 @@ function pubServer(opts) {
   });
 
   u.each(opts.generatorPlugins.reverse(), function(plugin) {
-    debug('generator plugin:', plugin.inspect());
+    debug('generator plugin:', plugin.path, plugin.inspect());
     require(plugin.path)(generator);
   });
 

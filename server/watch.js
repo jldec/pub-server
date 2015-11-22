@@ -6,7 +6,7 @@
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
  */
 
-var debug = require('debug')('pub:server:watch');
+var debug = require('debug')('pub:watch');
 
 var path = require('path');
 var chokidar = require('chokidar');

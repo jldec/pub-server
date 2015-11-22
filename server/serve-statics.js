@@ -111,7 +111,8 @@ module.exports = function serveStatics(opts, cb) {
   function watchAll() {
     u.each(staticPaths, function(sp) {
       if (sp.watch && !opts['no-watch']) {
-        watch(sp, u.throttleMs(function() {
+        watch(sp, u.throttleMs(function(evt, path) {
+          log('static %s %s', evt, path);
           scan(sp, function() {
             if (self.server && self.server.generator) {
               self.server.generator.reload();

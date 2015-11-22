@@ -2,6 +2,7 @@
  * _generator.js
  *
  * browserify entry point to load generator into client
+ * served at /pub/_generator.js by serve-scripts.js
  * depends on jquery
  *
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
@@ -20,7 +21,7 @@ initOpts(function(err, opts) {
   opts.log.logger.noErrors = true;
 
   // get browserified generator plugins - avoid caching across directories
-  $.getScript('./_generator-plugins.js?_=' + encodeURIComponent(opts.basedir))
+  $.getScript(pubRef.relPath + '/pub/_generator-plugins.js?_=' + encodeURIComponent(opts.basedir))
   .fail(function(jqXHR) {
     opts.log(new Error(jqXHR.responseText));
   })
