@@ -1,3 +1,6 @@
+##### Nov 22 2015 v1.9.19
+- fix marked-forms dependency (broken in 1.9.17)
+
 ##### Nov 22 2015 v1.9.18
 - add pub-pager plugin to package.json
 - NOTE: pub-pager is not compatible with pub-pkg-editor (yet)
