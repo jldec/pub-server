@@ -1,3 +1,11 @@
+##### Dec 03 2015 v1.9.21
+- update pub-src-github, pub-src-fs to handle binaries
+- (pub-src-redis doesn't handle binaries yet)
+
+##### Nov 22 2015 v1.9.20
+- update pager
+- expose generator.debug
+
 ##### Nov 22 2015 v1.9.19
 - fix marked-forms dependency (broken in 1.9.17)
 
