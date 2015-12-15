@@ -1,3 +1,10 @@
+##### Dec 15 2015 v1.10.0
+- add support for pub-pkg-spa in preparation for new editor
+- don't output pub/*.js unless opts.editor
+- move socket.io client from pub-ux.js into separate pub-sockets.js
+- remove built-in pub-pager package
+- remove htmlOnly option
+
 ##### Dec 03 2015 v1.9.21
 - update pub-src-github, pub-src-fs to handle binaries
 - (pub-src-redis doesn't handle binaries yet)

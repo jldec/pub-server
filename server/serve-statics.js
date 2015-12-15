@@ -255,7 +255,7 @@ module.exports = function serveStatics(opts, cb) {
     var omit = defaultOutput.omitRoutes;
     if (omit && !u.isArray(omit)) { omit = [omit]; }
 
-    // TODO: re-use similar filter in generator.output
+    // TODO: re-use similar filter in generator.output and serve-scripts.outputAll
     var filterRe = new RegExp('^(/admin/|/server/' +
                 (opts.editor ? '' : '|/pub/') +
                        (omit ? '|' + u.map(omit, u.escapeRegExp).join('|') : '') +

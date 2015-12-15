@@ -31,7 +31,6 @@ cli
   .option('-t, --theme <name>',      'theme module-name or dir, repeatable', collect, [])
   .option('-o, --output-path <dir>', 'output dir [./out]')
   .option('-O, --output-only',       'output html, scripts, static files and exit')
-  .option('-G, --html-only',         'output generated html files and exit')
   .option('-r, --root <prefix>',     'generate /prefix urls, "." means path relative')
   .option('-s, --static <dir>',      'static dir, repeatable, supports <dir>,<route>', collectStaticPaths, [])
   .option('-S, --static-only <dir>', 'serve only static files from <dir>', collectStaticPaths, [])
@@ -41,7 +40,7 @@ cli
   .option('-w, --watch-pkgs',        'also watch inside packages')
   .option('-W, --no-watch',          'disable watcher entirely')
   .option('-K, --no-sockets',        'no websockets')
-  .option('-E, --no-editor',         'website only, no editor')
+  .option('-E, --no-editor',         'website only, no editor or spa support')
   .option('-m, --minify',            'minify scripts')
   .option('-d, --dbg',               'enable scriptmaps and client-side debug traces')
   .option('-D, --debug',             'node --debug (server and client-side)')
@@ -60,14 +59,13 @@ if (cli.root === '.')              { opts.relPaths = true; }
 else if (cli.root)                 { opts.staticRoot = cli.root; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
-if (cli.htmlOnly)                  { opts.htmlOnly = true; }
 if (cli.static.length)             { opts.staticPaths = cli.static; }
 if (cli.staticOnly.length)         { opts.staticOnly = cli.staticOnly; }
 if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }
 if (cli.ignoreConfig)              { opts.ignoreConfig = true; }
 if (cli.pages)                     { opts.logPages = true; }
 if (cli.watch && cli.watchPkgs)    { opts.watchPkgs = true; }
-if (!cli.watch || cli.outputOnly || cli.htmlOnly) { opts['no-watch'] = true; }
+if (!cli.watch || cli.outputOnly)  { opts['no-watch'] = true; }
 if (!cli.sockets || cli.outputOnly) { opts['no-sockets'] = true; }
 if (cli.editor && !cli.staticOnly.length) { opts.editor = true; }
 if (cli.dbg)                       { opts.dbg = process.env.DEBUG || '*'; opts['no-timeouts'] = true; }

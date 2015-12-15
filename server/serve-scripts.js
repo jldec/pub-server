@@ -53,12 +53,19 @@ module.exports = function serveScripts(opts, server) {
   });
 
   self.scripts.push( {
-    route: '/server/pub-ux.js',
-    path: fspath.join(__dirname, '../client/pub-ux.js')
+    route: '/server/pub-sockets.js',
+    path: fspath.join(__dirname, '../client/pub-sockets.js')
   } );
 
   // editor scripts
   if (opts.editor) {
+
+    if (!opts.spa) {
+      self.scripts.push( {
+        route: '/server/pub-ux.js',
+        path: fspath.join(__dirname, '../client/pub-ux.js')
+      } );
+    }
 
     self.scripts.push( {
       route: '/pub/_generator.js',
@@ -126,6 +133,10 @@ module.exports = function serveScripts(opts, server) {
       res.send(generator.outputPages(req.query.output));
     });
 
+    app.get('/admin/logPages', function(req, res) {
+      res.send(generator.logPages());
+    });
+
     app.get('/admin/reload', function(req, res) {
       generator.reload()
       res.status(200).send('OK');
@@ -135,11 +146,22 @@ module.exports = function serveScripts(opts, server) {
   // publish browserscripts
   function outputAll(generator) {
 
-    var dest = (opts.outputs && opts.outputs[0]);
-    if (!dest) return log('scripts.outputAll: no output');
+    var output = (opts.outputs && opts.outputs[0]);
+    if (!output) return log('scripts.outputAll: no output');
+
+    var omit = output.omitRoutes;
+    if (omit && !u.isArray(omit)) { omit = [omit]; }
+
+    // TODO: re-use similar filter in server/serve-statics and generator.output
+    var filterRe = new RegExp( '^(/admin/|/server/' +
+                (opts.editor ? '' : '|/pub/') +
+                       (omit ? '|' + u.map(omit, u.escapeRegExp).join('|') : '') +
+                               ')');
 
     u.each(self.scripts, function(script) {
-      var out = fspath.join(dest.path, script.route);
+      if (filterRe.test(script.route)) return;
+
+      var out = fspath.join(output.path, script.route);
       var ws = fs.createOutputStream(out);
       ws.on('finish', function() {
         log('output script: %s', out);
@@ -154,8 +176,8 @@ module.exports = function serveScripts(opts, server) {
     });
 
     if (opts.editor) {
-      var out = fspath.join(dest.path, '/pub/_opts.json');
-      fs.outputJson(out, serializeOpts(generator, true, dest), function(err) {
+      var out = fspath.join(output.path, '/pub/_opts.json');
+      fs.outputJson(out, serializeOpts(generator, true, output), function(err) {
         log(err || 'output opts: %s', out);
       });
     }

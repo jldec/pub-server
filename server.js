@@ -61,15 +61,13 @@ function pubServer(opts) {
     generator.load(function(err) {
       if (err) return log(err);
 
-      if (opts.outputOnly || opts.htmlOnly) {
+      if (opts.outputOnly) {
         generator.outputPages();
 
-        if (!opts.htmlOnly) {
-          var statics = require('./server/serve-statics')(opts, function(){
-            statics.outputAll();
-          });
-          require('./server/serve-scripts')(opts).outputAll(generator);
-        }
+        var statics = require('./server/serve-statics')(opts, function(){
+          statics.outputAll();
+        });
+        require('./server/serve-scripts')(opts).outputAll(generator);
         generator.unload();
         return;
       }
