@@ -1,6 +1,6 @@
 (The MIT License)
 
-Copyright (c) 2015 Jürgen Leschner -- github.com/jldec
+Copyright (c) 2015-2016 Jürgen Leschner -- github.com/jldec
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

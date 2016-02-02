@@ -62,7 +62,7 @@ module.exports = function serveScripts(opts, server) {
 
     if (!opts.spa) {
       self.scripts.push( {
-        route: '/server/pub-ux.js',
+        route: '/pub/pub-ux.js',
         path: fspath.join(__dirname, '../client/pub-ux.js')
       } );
     }

@@ -1,6 +1,11 @@
+##### Feb 02 2016 v1.10.1
+- move pub-ux.js from /server/ to /pub/ (fixes issue introduced in v1.10.0)
+- proper local @data frame for #eachFragment and #eachPage helpers
+- #eachFragment supports /page#fragment prefix pattern
+
 ##### Dec 15 2015 v1.10.0
 - add support for pub-pkg-spa in preparation for new editor
-- don't output pub/*.js unless opts.editor
+- don't output `pub/*.js` unless opts.editor
 - move socket.io client from pub-ux.js into separate pub-sockets.js
 - remove built-in pub-pager package
 - remove htmlOnly option
