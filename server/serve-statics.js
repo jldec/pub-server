@@ -133,7 +133,7 @@ module.exports = function serveStatics(opts, cb) {
 
     // only construct src, defaults, sendOpts etc. once
     if (!src) {
-      sp.depth = sp.depth || 5;
+      sp.depth = sp.depth || opts.staticDepth || 5;
       sp.maxAge = 'maxAge' in sp ? sp.maxAge : '10m';
       sp.includeBinaries = true;
       src = sp.src = fsbase(sp);

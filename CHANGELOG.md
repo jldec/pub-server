@@ -1,3 +1,7 @@
+##### May 10 2016 v1.10.2
+- output.match filter for filtering on output
+- opts.staticDepth default
+
 ##### Feb 02 2016 v1.10.1
 - move pub-ux.js from /server/ to /pub/ (fixes issue introduced in v1.10.0)
 - proper local @data frame for #eachFragment and #eachPage helpers
