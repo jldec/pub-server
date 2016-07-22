@@ -1,6 +1,6 @@
 
 # pub-server <br>
-[![](/images/run2.jpg)](https://jldec.github.io/pub-doc/)
+[Docs](https://jldec.github.io/pub-doc/)
 
 **pub-server**, or **pub** for short is an HTML generator+editor entirely written in javascript.
 
