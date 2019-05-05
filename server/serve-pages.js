@@ -5,13 +5,14 @@
  * with page http-headers, checks http methods
  * also serves redirects
  *
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:server:pages');
 var u = require('pub-util');
 var mime = require('mime');
 var path = require('path');
+var ppath = path.posix || path;
 
 module.exports = function servePages(server) {
 
@@ -42,7 +43,7 @@ module.exports = function servePages(server) {
       generator.req = req;
       generator.res = res;
 
-      resHeaders(res, page)
+      resHeaders(res, page);
       res.send(generator.renderDoc(page));
 
     });
@@ -69,9 +70,9 @@ module.exports = function servePages(server) {
       if (m) { res.set(m[1], m[2]); }
     });
 
-    var ext = path.extname(page._href);
+    var ext = ppath.extname(page._href);
     if (!ext || res.getHeader('Content-Type')) return;
-    res.set('Content-Type', mime.lookup(ext));
+    res.set('Content-Type', mime.getType(ext));
   }
 
   function redirects(req, res, next) {
@@ -81,4 +82,4 @@ module.exports = function servePages(server) {
     res.redirect(newUrl.status, newUrl.url);
   }
 
-}
+};

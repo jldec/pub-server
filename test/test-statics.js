@@ -1,15 +1,17 @@
 /**
  * pub-server test-statics.js
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  *
 **/
+
+/*eslint indent: ["error", 2, { "CallExpression": {"arguments": off} }]*/
 
 var test = require('tape');
 
 var u = require('pub-util');
 var EventEmitter = require('events').EventEmitter;
 
-runTest("routes, overwrites, and single-file paths",
+runTest('routes, overwrites, and single-file paths',
 
   [ { path:__dirname + '/static1' },
     { path:__dirname + '/static2', route:'/', depth:2 },
@@ -42,7 +44,7 @@ runTest("routes, overwrites, and single-file paths",
   '  ' + __dirname + '/static1\n' );
 
 
-runTest("index.html",
+runTest('index.html',
   [ { path:__dirname + '/static5' } ],
   [ '/index.htm', '/', '/foo.bar', '/a/', '/a/index.x', '/a/bar.foo' ],
   [ '/index.htm',
@@ -55,7 +57,7 @@ runTest("index.html",
   { indexFiles:['index.html'] }
 );
 
-runTest("index.htm",
+runTest('index.htm',
   [ { path:__dirname + '/static5' } ],
   [ '/',
     '/index.html',
@@ -74,7 +76,7 @@ runTest("index.htm",
   { indexFiles:['index.htm'] }
 );
 
-runTest("index.html, index.htm",
+runTest('index.html, index.htm',
   [ { path:__dirname + '/static5' } ],
   [ '/',
     '/index.html',
@@ -94,7 +96,7 @@ runTest("index.html, index.htm",
 );
 
 function runTest(name, staticPaths, expectedKeys, expectedFiles, expectedLogText, extraOpts) {
-  expectedLogText = expectedLogText || ''
+  expectedLogText = expectedLogText || '';
   test(name, function(t) {
     t.timeoutAfter(3000);
     var server = new EventEmitter();
@@ -108,7 +110,7 @@ function runTest(name, staticPaths, expectedKeys, expectedFiles, expectedLogText
     };
     if (extraOpts) { u.assign(opts, extraOpts); }
     server.app = { use: noop, get: noop };
-    var statics = require('../server/serve-statics')(opts, function(err, file$) {
+    require('../server/serve-statics')(opts, function(err, file$) {
       var actualKeys = u.keys(file$);
       var actualFiles = u.pluck(file$, 'file');
       // console.log('keys:', actualKeys);

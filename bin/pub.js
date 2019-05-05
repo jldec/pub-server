@@ -14,43 +14,22 @@ process.argv.slice(2).forEach(function(arg){
   var flag = arg.split('=')[0];
 
   switch (flag) {
-    case '-?':
-    case '-H':
-      args.push('-h');
-      break;
-    case 'debug':
-    case '--debug':
-    case '--debug-brk':
-      args.unshift(arg);
-      args.push('--dbg');
-      break;
-    case '-D':
-      args.unshift('--debug');
-      args.push('--dbg');
-      break;
-    case '-B':
-      args.unshift('--debug-brk');
-      args.push('--dbg');
-      break;
-    case '-gc':
-    case '--expose-gc':
-      args.unshift('--expose-gc');
-      break;
-    case '--gc-global':
-    case '--harmony':
-    case '--harmony-proxies':
-    case '--harmony-collections':
-    case '--harmony-generators':
-    case '--no-deprecation':
-    case '--prof':
-    case '--throw-deprecation':
-    case '--trace-deprecation':
-      args.unshift(arg);
-      break;
-    default:
-      if (0 == arg.indexOf('--trace')) args.unshift(arg);
-      else args.push(arg);
-      break;
+  case '-?':
+  case '-H':
+    args.push('-h');
+    break;
+  case '-D':
+    args.unshift('--inspect');
+    args.push('--dbg');
+    break;
+  case '-B':
+    args.unshift('--inspect');
+    args.unshift('--debug-brk');
+    args.push('--dbg');
+    break;
+  default:
+    args.push(arg);
+    break;
   }
 });
 

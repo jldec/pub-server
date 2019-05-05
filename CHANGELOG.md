@@ -1,3 +1,19 @@
+##### May 05 2019 v2.0.0
+- and we're back!
+- tested with Node versions 8.x, 10.x, and 11.x.
+- Windows file paths and directory separator support
+- Windows fragment parser support for source files with Windows end-of-line (CRLF) characters 
+- major version upgrade to lodash 4.x in pub-util, added aliases for better backward compatibility
+- major version upgrade to marked 0.6.x for commonmark compliance, see new workaround for spaces in field names in marked-forms v2.0.0
+- fixed directory sorting bug in pub-src-fs and pub-src-redis
+- run CI on many modules with tests
+- introduced eslint for major modules
+- don't use package-lock.json per https://github.com/sindresorhus/ama/issues/479#issuecomment-310661514
+- reduced scanning for statics, and default to single level of statics when no pub-config exists. 
+- bump dependencies across libraries mostly to address deprecations and security warnings
+- removed support for pub-pkg-spa
+- use HTTPS instead of HTTP for links in readme, docs etc.  
+
 ##### May 10 2016 v1.10.2
 - output.match filter for filtering on output
 - opts.staticDepth default

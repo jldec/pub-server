@@ -3,9 +3,9 @@
  *
  * launches (express) server after resolving opts
  * invoke directly via node command line, or via require()
- * see: http://nodejs.org/api/modules.html#modules_accessing_the_main_module
+ * see: https://nodejs.org/api/modules.html#modules_accessing_the_main_module
  *
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:server');
@@ -32,6 +32,7 @@ function pubServer(opts) {
 
   var server = this;
 
+  // pass platform-specific ./node_modules path to resolve-opts for builtin packages
   server.opts = opts = require('pub-resolve-opts')(opts, path.join(__dirname, 'node_modules'));
 
   opts.production  = opts.production || (process.env.NODE_ENV === 'production');
@@ -57,12 +58,14 @@ function pubServer(opts) {
   //--//--//--//--//--//--//--//--//--//--//--//
 
   function run() {
-
     generator.load(function(err) {
       if (err) return log(err);
 
       if (opts.outputOnly) {
-        generator.outputPages();
+        generator.outputPages(function(err, result) {
+          if (err) { log(err); }
+          log('output %s generated pages', u.flatten(result).length);
+        });
 
         var statics = require('./server/serve-statics')(opts, function(){
           statics.outputAll();
@@ -125,6 +128,7 @@ function pubServer(opts) {
     process.on('SIGTERM', function() {
       log('shutting down');
       server.http.close(function() {
+        generator.unload();
         server.emit('shutdown');
         process.exit();
       });

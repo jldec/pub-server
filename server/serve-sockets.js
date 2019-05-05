@@ -5,13 +5,12 @@
  * primary purpose (for now) is for watchers to trigger page reload
  * does nothing if opts.no-sockets is set (and disabled on production)
  *
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  */
 
 
 
 var debug = require('debug')('pub:sockets');
-var u = require('pub-util');
 
 module.exports = function serveSockets(server) {
 
@@ -24,8 +23,8 @@ module.exports = function serveSockets(server) {
   var generator = server.generator;
 
   io.on('connection', function(socket) {
-      debug('connect    %s', socket.id);
-      generator.on('loaded', emitReload);
+    debug('connect    %s', socket.id);
+    generator.on('loaded', emitReload);
 
     socket.on('disconnect', function(){
       debug('disconnect %s', socket.id);
@@ -34,4 +33,4 @@ module.exports = function serveSockets(server) {
 
     function emitReload() { socket.emit('reload'); }
   });
-}
+};

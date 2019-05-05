@@ -2,7 +2,7 @@
 
 /*
  * pub command script
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  */
 
 var pkg = require('../package.json');
@@ -14,14 +14,14 @@ var cli = require('commander');
 cli.unknownOption = function(opt) {
   process.stdout.write('\n  unknown option: ' + opt + '\n' + cli.helpInformation());
   process.exit(1);
-}
+};
 
 // tweak usage not to include the first line with the incorrect command name
 cli.helpInformation = function() { return '\n' +
   'usage: pub [opts] [dir]\n' +
   'opts:\n' +
   cli.optionHelp().replace(/^/gm, '  ') + '\n\n';
-}
+};
 
 var u = require('pub-util');
 var inspect = require('util').inspect;
@@ -40,7 +40,7 @@ cli
   .option('-w, --watch-pkgs',        'also watch inside packages')
   .option('-W, --no-watch',          'disable watcher entirely')
   .option('-K, --no-sockets',        'no websockets')
-  .option('-E, --no-editor',         'website only, no editor or spa support')
+  .option('-E, --no-editor',         'website only, no editor support')
   .option('-m, --minify',            'minify scripts')
   .option('-d, --dbg',               'enable scriptmaps and client-side debug traces')
   .option('-D, --debug',             'node --debug (server and client-side)')

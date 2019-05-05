@@ -18,13 +18,14 @@
  *       extend to serve files from remote storage
  *       (supports only local files for now)
  *
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:static');
 var u = require('pub-util');
 var fs = require('fs-extra');
 var path = require('path');
+var ppath = path.posix || path;
 var fsbase = require('pub-src-fs/fs-base');
 var send = require('send');
 var watch = require('./watch');
@@ -78,7 +79,7 @@ module.exports = function serveStatics(opts, cb) {
   scanAll(function(err) {
     if (self.server && self.server.generator && !self.server.generator.home) {
       log('%s static files', u.size(self.file$));
-    };
+    }
     cb && cb(err, self.file$);
   });
 
@@ -91,7 +92,7 @@ module.exports = function serveStatics(opts, cb) {
   function serveRoutes(server) {
     self.server = server;
     server.app.use(serve);
-    server.app.get('/admin/statics', function(req, res) { res.send(Object.keys(self.file$)); })
+    server.app.get('/admin/statics', function(req, res) { res.send(Object.keys(self.file$)); });
     watchAll();
     return self; // chainable
   }
@@ -102,7 +103,7 @@ module.exports = function serveStatics(opts, cb) {
   function scanAll(cb) {
     var done = u.after(staticPaths.length, u.maybe(cb));
     u.each(staticPaths, function(sp) {
-      scan(sp, function(err) {
+      scan(sp, function() {
         done();
       });
     });
@@ -111,14 +112,14 @@ module.exports = function serveStatics(opts, cb) {
   function watchAll() {
     u.each(staticPaths, function(sp) {
       if (sp.watch && !opts['no-watch']) {
-        watch(sp, u.throttleMs(function(evt, path) {
+        watch(sp, function(evt, path) {
           log('static %s %s', evt, path);
           scan(sp, function() {
             if (self.server && self.server.generator) {
               self.server.generator.reload();
             }
           });
-        }, sp.throttle || opts.throttleReload || '10s'));
+        });
       }
     });
   }
@@ -133,6 +134,7 @@ module.exports = function serveStatics(opts, cb) {
 
     // only construct src, defaults, sendOpts etc. once
     if (!src) {
+      sp.name = sp.name || 'staticPath:' + sp.path;
       sp.depth = sp.depth || opts.staticDepth || 5;
       sp.maxAge = 'maxAge' in sp ? sp.maxAge : '10m';
       sp.includeBinaries = true;
@@ -169,19 +171,19 @@ module.exports = function serveStatics(opts, cb) {
         var file = entry.filepath;
         var reqPath;
         if (self.indexFiles && self.indexFilesRe.test(file)) {
-          var shortPath = path.join(sp.route, file.replace(self.indexFilesRe, indexFileSlash));
+          var shortPath = ppath.join(sp.route, file.replace(self.indexFilesRe, indexFileSlash));
           if (!file$[shortPath]) {
             reqPath = shortPath;
           }
         }
-        reqPath = reqPath || path.join(sp.route, file);
+        reqPath = reqPath || ppath.join(sp.route, file);
 
         // only start logging dups on the last initial scan
         if (file$[reqPath] && self.scanCnt >= staticPathsRev.length) {
           log('duplicate static %s\n  %s\n  %s', file, file$[reqPath].sp.path, sp.path);
         }
         file$[reqPath] = {sp:sp, file:file}; // map reqPath to spo
-        if (/^\/[^\/]+\.(htm|html)$/i.test(reqPath)) { dfile = reqPath; }
+        if (/^\/[^/]+\.(htm|html)$/i.test(reqPath)) { dfile = reqPath; }
       });
     });
 
@@ -202,7 +204,7 @@ module.exports = function serveStatics(opts, cb) {
     // try straight match
     var spo = file$[reqPath];
 
-    if (!spo && !/\/$|\.[^\/]+$/.test(reqPath)) {
+    if (!spo && !/\/$|\.[^/]+$/.test(reqPath)) {
 
       // try adding trailing / and redirect if found
       if (self.trailingSlash) {
@@ -217,7 +219,7 @@ module.exports = function serveStatics(opts, cb) {
       // try extensions
       if (!spo && self.extensions) {
         for (var i=0; i<self.extensions.length; i++) {
-          if (spo = file$[reqPath + self.extensions[i]]) break;
+          if ((spo = file$[reqPath + self.extensions[i]])) break;
         }
       }
     }
@@ -230,7 +232,7 @@ module.exports = function serveStatics(opts, cb) {
 
     debug('static %s%s', reqPath, (reqPath !== spo.file ? ' -> ' + spo.file : ''));
 
-    var doit = function() { send(req, spo.file, spo.sp.sendOpts).pipe(res); }
+    var doit = function() { send(req, spo.file, spo.sp.sendOpts).pipe(res); };
 
     if (spo.sp.delay) return u.delay(doit, u.ms(spo.sp.delay));
 
@@ -249,7 +251,7 @@ module.exports = function serveStatics(opts, cb) {
 
     var done = u.after(count, function() {
       log('output %s %s static files', defaultOutput.path, result.length);
-      cb(result)
+      cb(result);
     });
 
     var omit = defaultOutput.omitRoutes;
@@ -278,4 +280,4 @@ module.exports = function serveStatics(opts, cb) {
     return self; // chainable
   }
 
-}
+};

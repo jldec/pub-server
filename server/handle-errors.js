@@ -4,11 +4,12 @@
  * - this should be the last handler loaded by the server
  * - depends on serve-pages being invoked before this
  *
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:server');
 var path = require('path');
+var ppath = path.posix || path;
 var u = require('pub-util');
 
 module.exports = function handleErrors(server) {
@@ -38,9 +39,9 @@ module.exports = function handleErrors(server) {
   //--//--//--//--//--//--//--//--//--//--//
 
   // return 404 except for html pages
-  function notFound(req, res, next) {
+  function notFound(req, res) {
 
-    var ext = path.extname(req.path);
+    var ext = ppath.extname(req.path);
     if ((!ext || /\.htm|\.html/i.test(ext)) && !u.size(req.query)) return error(404, req, res);
 
     debug('404 %s', req.originalUrl);
@@ -50,7 +51,7 @@ module.exports = function handleErrors(server) {
   // error handler middleware
   // body-parser returns err.status = 400 on POST with invalid json (application/json content-type)
   //
-  function errHandler(err, req, res, next) {
+  function errHandler(err, req, res) {
     if (!err.status) { log(err); }
     error(err.status || 500, req, res, u.str(err));
   }
@@ -60,7 +61,7 @@ module.exports = function handleErrors(server) {
     debug('%s %s', status, req.originalUrl);
     msg = msg || '';
 
-    var page = generator.page$['/' + status]
+    var page = generator.page$['/' + status];
 
     // 404 with no matching status page => redirect to home
     if (!page && status === 404) {
@@ -80,8 +81,8 @@ module.exports = function handleErrors(server) {
 
     res.status(status).send(
       generator.renderDoc(page)
-      .replace(/%s/g, u.escape(msg)) // TODO - replace with humane.js or proper template
-      .replace('<body', '<body data-err-status="' + status + '"' + (msg ? ' data-err-msg="' + u.escape(msg) + '"' : ''))
+        .replace(/%s/g, u.escape(msg)) // TODO - replace with humane.js or proper template
+        .replace('<body', '<body data-err-status="' + status + '"' + (msg ? ' data-err-msg="' + u.escape(msg) + '"' : ''))
     );
   }
 
@@ -97,7 +98,7 @@ module.exports = function handleErrors(server) {
   function testPost(req, res) {
     log('/admin/testpost', req.body);
     res.status(200).send('OK');
-  };
+  }
 
   function testGet(req, res) {
     log('/admin/testget', req.query);
@@ -123,4 +124,4 @@ module.exports = function handleErrors(server) {
       session: req.session
     };
   }
-}
+};

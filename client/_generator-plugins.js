@@ -1,1 +1,1 @@
-module.exports = { "dummy": "content comes from transformPlugins() in server/serve-scripts" }
+module.exports = { 'dummy': 'content comes from transformPlugins() in server/serve-scripts' };

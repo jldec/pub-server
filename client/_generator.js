@@ -8,6 +8,9 @@
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
 */
 
+/* global $ */
+/* global pubRef */
+
 var debug = require('debug')('pub:generator');
 var initOpts = require('./init-opts');
 
@@ -22,25 +25,25 @@ initOpts(function(err, opts) {
 
   // get browserified generator plugins - avoid caching across directories
   $.getScript(pubRef.relPath + '/pub/_generator-plugins.js?_=' + encodeURIComponent(opts.basedir))
-  .fail(function(jqXHR) {
-    opts.log(new Error(jqXHR.responseText));
-  })
-  .done(function(script) {
-    debug('plugins loaded');
+    .fail(function(jqXHR) {
+      opts.log(new Error(jqXHR.responseText));
+    })
+    .done(function() {
+      debug('plugins loaded');
 
-    // load sources
-    generator.load(function(err) {
-      if (err) return opts.log(err);
-      debug('generator loaded');
+      // load sources
+      generator.load(function(err) {
+        if (err) return opts.log(err);
+        debug('generator loaded');
 
-      // hook custom timers
-      generator.emit('init-timers', false);
+        // hook custom timers
+        generator.emit('init-timers', false);
 
-      // slightly ugly way to notify client (editor) that generator is ready
-      if (window.onGeneratorLoaded) {
-        window.onGeneratorLoaded(generator);
-        debug('ui loaded');
-      }
+        // slightly ugly way to notify client (editor) that generator is ready
+        if (window.onGeneratorLoaded) {
+          window.onGeneratorLoaded(generator);
+          debug('ui loaded');
+        }
+      });
     });
-  });
 });

@@ -1,7 +1,7 @@
 /*
  * pub-server watch-sources.js
  *
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  */
 
 var watch = require('./watch');
@@ -15,9 +15,9 @@ module.exports = function watchSources(generator) {
       watch(src, function(evt, path) {
         log('source %s %s', evt, path);
         src._reloadFromSource = true;
-        generator.reload();
+        generator.reload(); // throttled
       });
       src._watching = true; // see generator/update
     }
   });
-}
+};

@@ -8,17 +8,17 @@
  *   server optional, if not passed, no routes served
  *   serveStatics.outputAll() - copy scripts to outputs[0] (for pub -O)
  *
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:scripts');
 var u = require('pub-util');
 var through = require('through2');
-var fspath = require('path');
+var fspath = require('path'); // for platform specific path.join
 var fs = require('fs-extra');
-var babelify = require('babelify');
+var createOutputStream = require('create-output-stream');
 
-module.exports = function serveScripts(opts, server) {
+module.exports = function serveScripts(opts) {
 
   if (!(this instanceof serveScripts)) return new serveScripts(opts);
   var self = this;
@@ -32,7 +32,7 @@ module.exports = function serveScripts(opts, server) {
   // expose build-bundle for output to file
   browserify.buildBundle = require('browserify-middleware/lib/build-bundle.js');
 
-  /* browsrify pregen with production is slow */
+  /* browserify pregen with production is slow */
   if ((opts.outputOnly || opts.minify) && !opts.dbg) { browserify.settings.mode = 'production'; }
 
   browserify.settings( { ignore: ['request', 'request-debug', 'graceful-fs', 'resolve', 'osenv', 'tmp'],
@@ -47,7 +47,7 @@ module.exports = function serveScripts(opts, server) {
       path:  script.path,
       delay: script.delay,
       opts:  u.omit(script, 'path', 'route', 'inject', 'maxAge')
-    }
+    };
     if ('maxAge' in script) { o.opts.cache = script.maxAge || 'dynamic'; }
     return o;
   });
@@ -60,12 +60,10 @@ module.exports = function serveScripts(opts, server) {
   // editor scripts
   if (opts.editor) {
 
-    if (!opts.spa) {
-      self.scripts.push( {
-        route: '/pub/pub-ux.js',
-        path: fspath.join(__dirname, '../client/pub-ux.js')
-      } );
-    }
+    self.scripts.push( {
+      route: '/pub/pub-ux.js',
+      path: fspath.join(__dirname, '../client/pub-ux.js')
+    } );
 
     self.scripts.push( {
       route: '/pub/_generator.js',
@@ -98,7 +96,7 @@ module.exports = function serveScripts(opts, server) {
             debug(req.path, 'done waiting', script.delay);
             handler(req, res);
           }, u.ms(script.delay));
-        }
+        };
       }
       app.get(script.route, delayed || handler);
     });
@@ -109,7 +107,7 @@ module.exports = function serveScripts(opts, server) {
         generator.serverSave(req.body, req.user, function(err, results) {
           if (err) return res.status(500).send(err);
           res.status(200).send(results);
-        })
+        });
       });
       app.get('/pub/_opts.json', function(req, res) {
         res.set('Cache-Control', 'no-cache');
@@ -122,7 +120,7 @@ module.exports = function serveScripts(opts, server) {
       generator.flushCaches(function(err, results) {
         if (err) return res.status(500).send(err);
         res.status(200).send(results);
-      })
+      });
     });
 
     app.get('/admin/reloadSources', function(req, res) {
@@ -130,7 +128,10 @@ module.exports = function serveScripts(opts, server) {
     });
 
     app.get('/admin/outputPages', function(req, res) {
-      res.send(generator.outputPages(req.query.output));
+      generator.outputPages(req.query.output, function(err, results) {
+        if (err) return res.status(500).send(err);
+        res.status(200).send(u.flatten(results));
+      });
     });
 
     app.get('/admin/logPages', function(req, res) {
@@ -138,7 +139,7 @@ module.exports = function serveScripts(opts, server) {
     });
 
     app.get('/admin/reload', function(req, res) {
-      generator.reload()
+      generator.reload();
       res.status(200).send('OK');
     });
   }
@@ -162,16 +163,16 @@ module.exports = function serveScripts(opts, server) {
       if (filterRe.test(script.route)) return;
 
       var out = fspath.join(output.path, script.route);
-      var ws = fs.createOutputStream(out);
+      var ws = createOutputStream(out);
+      var time = u.timer();
       ws.on('finish', function() {
-        log('output script: %s', out);
+        log('output script: %s (%d bytes, %d ms)', out, ws.bytesWritten, time());
       });
       ws.on('error', log);
 
-      // from browserify-middleware index.js (may need to do noParse map also)
+      // reuse browserify-middleware with current production or debug options
       var options = browserify.settings.normalize(script.opts);
       var bundler = browserify.buildBundle(script.path, options);
-      if (!opts.dbg) { bundler.plugin(require.resolve('minifyify'), { map:false } ); }
       bundler.bundle().pipe(ws);
     });
 
@@ -188,7 +189,7 @@ module.exports = function serveScripts(opts, server) {
   function transformPlugins(path) {
     if (!/_generator-plugins/.test(path)) return through();
     return through(
-      function tform(chunk, enc, cb) { cb() }, // ignore input
+      function tform(chunk, enc, cb) { cb(); }, // ignore input
       function flush(cb) {
         this.push(requirePlugins());
         cb();
@@ -197,10 +198,9 @@ module.exports = function serveScripts(opts, server) {
   }
 
   function requirePlugins() {
-    var s = u.reduce(opts.generatorPlugins.reverse(),
-      function(memo, plugin) {
-        return memo + 'require("' + plugin.path + '")(generator);\n';
-      }, '');
+    var s = u.reduce(opts.generatorPlugins.reverse(), function(memo, plugin) {
+      return memo + 'require("' + plugin.path + '")(generator);\n';
+    }, '');
 
     return s;
   }
@@ -226,8 +226,8 @@ module.exports = function serveScripts(opts, server) {
         generator.serializeFiles(source.files) :
         source.files;
       return rawSource;
-      });
+    });
     return sOpts;
   }
 
-}
+};
