@@ -96,12 +96,15 @@ function pubServer(opts) {
 
     server.app.disable('x-powered-by');
 
+    // see https://expressjs.com/en/guide/behind-proxies.html
+    server.app.set('trust proxy', opts['trust proxy'] || false);
+
     // log(err) shouldn't throw anymore
     log.logger.noErrors = true;
 
     // sessions come with optional redis logger
     server.sessions = require('pub-serve-sessions')(server);
-    log('starting up', opts.appUrl);
+    log('starting up', opts.appUrl, (opts.production ? 'production' : 'non-production'));
 
     // other default middleware
     var bodyParser = require('body-parser');
