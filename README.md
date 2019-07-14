@@ -1,5 +1,8 @@
 
 # pub-server <br>
+[![Azure Build Status](https://dev.azure.com/jldec/pub-server/_apis/build/status/jldec.pub-server?branchName=master)](https://dev.azure.com/jldec/pub-server/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://api.travis-ci.org/jldec/pub-server.svg?branch=master)](https://travis-ci.org/jldec/pub-server)
+
 [Docs](https://jldec.github.io/pub-doc/)
 
 **pub-server**, or **pub** for short is an HTML site-generator and editor entirely written in JavaScript.
@@ -46,7 +49,7 @@ npm install -g pub-server
 - `pub -h` shows the usage info below:
 
 ```
-pub-server v2.0.0
+pub-server v2.0.2
 
 usage: pub [opts] [dir]
 opts:
