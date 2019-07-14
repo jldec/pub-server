@@ -1,19 +1,19 @@
 strategy:
   matrix:
-    linux_node11:
+    linux_node12:
       imageName: 'ubuntu-16.04'
-      node_version: 11.x
-    mac_node11:
-      imageName: 'macos-10.13'
-      node_version: 11.x
-    windows_node11:
+      node_version: 12.x
+    mac_node12:
+      imageName: 'macos-10.14'
+      node_version: 12.x
+    windows_node12:
       imageName: 'windows-2019'
-      node_version: 11.x
+      node_version: 12.x
     linux_node10:
       imageName: 'ubuntu-16.04'
       node_version: 10.x
     mac_node10:
-      imageName: 'macos-10.13'
+      imageName: 'macos-10.14'
       node_version: 10.x
     windows_node10:
       imageName: 'vs2017-win2016'

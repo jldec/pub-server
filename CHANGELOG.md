@@ -1,3 +1,11 @@
+##### July 14, 2019 v2.0.2
+- bump dependencies to mitigate vulnerability in lodash (used by pub-util)
+- bump marked to v0.7.0
+- bump eslint, fix potential issue with Object.hasOwnProperty
+
+##### May 19 2019 v2.0.1
+- set opts['trust proxy'] for secure sessions on environments like Heroku
+
 ##### May 05 2019 v2.0.0
 - and we're back!
 - tested with Node versions 8.x, 10.x, and 11.x.
