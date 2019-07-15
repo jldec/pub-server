@@ -5,7 +5,7 @@
 
 [Docs](https://jldec.github.io/pub-doc/)
 
-**pub-server**, or **pub** for short is an HTML site-generator and editor entirely written in JavaScript.
+**pub-server**, or **pub** for short is an HTML site-generator and editor written in JavaScript.
 
 The following use-cases are supported
 
