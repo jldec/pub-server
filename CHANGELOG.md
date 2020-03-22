@@ -1,3 +1,11 @@
+##### March 22, 2020 v2.1.0
+- bump dependencies
+- tested with Node versions 10.x, 12.x and 13.x. using GitHub Actions
+- pub CLI will auto-open site in browser on macOS (unless `-A`)
+- if opts.linkNewWindow, auto-generate target="_blank" with `rel="noopener"`
+- persistent sessions using redis require secret in env.SSC or opts.session.secret
+- stricter commonmark compliance (e.g. no HTML tags in headings, preserve UTF-8 non-breaking space glyph)
+
 ##### July 14, 2019 v2.0.2
 - bump dependencies to mitigate vulnerability in lodash (used by pub-util)
 - bump marked to v0.7.0
