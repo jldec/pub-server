@@ -2,7 +2,7 @@
 
 /*
  * pub command script
- * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2020, Jürgen Leschner - github.com/jldec - MIT license
  */
 
 var pkg = require('../package.json');
@@ -27,6 +27,7 @@ var u = require('pub-util');
 var inspect = require('util').inspect;
 
 cli
+  .option('-A, --no-open',           'disable auto-open in browser (mac only)')
   .option('-p, --port <port>',       'server port [3001]')
   .option('-t, --theme <name>',      'theme module-name or dir, repeatable', collect, [])
   .option('-o, --output-path <dir>', 'output dir [./out]')
@@ -53,6 +54,7 @@ var opts = {};
 opts.cli = true;
 opts.dir = cli.args[0] || '.';
 
+if (cli.open)                      { opts.openBrowser = true; }
 if (cli.port)                      { opts.port = cli.port; }
 if (cli.theme.length)              { opts.pkgs = cli.theme; }
 if (cli.root === '.')              { opts.relPaths = true; }

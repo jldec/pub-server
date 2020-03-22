@@ -8,7 +8,7 @@
  *   server optional, if not passed, no routes served
  *   serveStatics.outputAll() - copy scripts to outputs[0] (for pub -O)
  *
- * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2020, Jürgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:scripts');
@@ -16,7 +16,6 @@ var u = require('pub-util');
 var through = require('through2');
 var fspath = require('path'); // for platform specific path.join
 var fs = require('fs-extra');
-var createOutputStream = require('create-output-stream');
 
 module.exports = function serveScripts(opts) {
 
@@ -35,7 +34,7 @@ module.exports = function serveScripts(opts) {
   /* browserify pregen with production is slow */
   if ((opts.outputOnly || opts.minify) && !opts.dbg) { browserify.settings.mode = 'production'; }
 
-  browserify.settings( { ignore: ['request', 'request-debug', 'graceful-fs', 'resolve', 'osenv', 'tmp'],
+  browserify.settings( { ignore: ['resolve', 'osenv', 'tmp'],
                          ignoreMissing: false } );
 
   browserify.settings.production('cache', '1h');
@@ -163,7 +162,8 @@ module.exports = function serveScripts(opts) {
       if (filterRe.test(script.route)) return;
 
       var out = fspath.join(output.path, script.route);
-      var ws = createOutputStream(out);
+      fs.ensureFileSync(out);
+      var ws = fs.createWriteStream(out);
       var time = u.timer();
       ws.on('finish', function() {
         log('output script: %s (%d bytes, %d ms)', out, ws.bytesWritten, time());
@@ -178,6 +178,7 @@ module.exports = function serveScripts(opts) {
 
     if (opts.editor) {
       var out = fspath.join(output.path, '/pub/_opts.json');
+      fs.ensureFileSync(out);
       fs.outputJson(out, serializeOpts(generator, true, output), function(err) {
         log(err || 'output opts: %s', out);
       });

@@ -5,11 +5,13 @@
  * invoke directly via node command line, or via require()
  * see: https://nodejs.org/api/modules.html#modules_accessing_the_main_module
  *
- * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2020, Jürgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:server');
 
+var osType = require('os').type();
+var exec = require('child_process').exec;
 var events = require('events');
 var path = require('path');
 var u = require('pub-util');
@@ -123,10 +125,22 @@ function pubServer(opts) {
 
     server.emit('init-app-last');
 
+    var limit = 10;
+    var tried = 1;
+    server.http.on('error', function(err) {
+      if (err.code === 'EADDRINUSE' && tried < limit) {
+        server.http.close();
+        opts.port = (parseInt(opts.port) || 3001) + 1;
+        log('port in use, trying', opts.port);
+        server.http.listen(opts.port);
+        tried ++;
+      }
+    });
+
     require('./server/handle-errors')(server);
 
     server.http.listen(opts.port);
-    log('listening on port', opts.port);
+    log('port', opts.port);
 
     process.on('SIGTERM', function() {
       log('shutting down');
@@ -137,6 +151,11 @@ function pubServer(opts) {
       });
     });
 
+    setTimeout(function() {
+      if (opts.cli && opts.openBrowser && osType.match(/Darwin/)) {
+        exec('open "http://localhost:"' + opts.port);
+      }
+    }, 100);
   }
 
 }

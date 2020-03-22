@@ -4,8 +4,10 @@
  * - this should be the last handler loaded by the server
  * - depends on serve-pages being invoked before this
  *
- * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2020, Jürgen Leschner - github.com/jldec - MIT license
  */
+
+/*eslint no-unused-vars: "off"*/
 
 var debug = require('debug')('pub:server');
 var path = require('path');
@@ -48,11 +50,12 @@ module.exports = function handleErrors(server) {
     res.status(404).end();
   }
 
-  // error handler middleware
+  // error handler middleware - must have 4 parameters
   // body-parser returns err.status = 400 on POST with invalid json (application/json content-type)
   //
-  function errHandler(err, req, res) {
-    if (!err.status) { log(err); }
+  function errHandler(err, req, res, next) {
+    // if (!err.status) { log(err); }
+    log(err);
     error(err.status || 500, req, res, u.str(err));
   }
 

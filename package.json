@@ -1,6 +1,6 @@
 {
   "name": "pub-server",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "markdown site generator, web server, and editor",
   "main": "server.js",
   "preferGlobal": true,
@@ -8,43 +8,41 @@
     "pub": "./bin/pub.js"
   },
   "dependencies": {
-    "asyncbuilder": "^1.0.6",
+    "asyncbuilder": "^1.0.7",
     "body-parser": "^1.19.0",
     "browserify-middleware": "^8.1.1",
-    "chokidar": "^3.0.2",
+    "chokidar": "^3.3.1",
     "commander": "^2.20.0",
     "compression": "^1.7.4",
-    "create-output-stream": "0.0.1",
     "debug": "^4.1.1",
     "express": "^4.17.1",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.0",
     "mime": "^2.4.4",
     "minifyify": "^7.3.5",
-    "mkdirp": "^0.5.1",
-    "pub-generator": "2.3.0",
-    "pub-pkg-editor": "^1.5.7",
-    "pub-pkg-font-awesome": "^3.0.2",
-    "pub-pkg-font-open-sans": "^1.5.0",
-    "pub-pkg-google-oauth": "^2.0.1",
-    "pub-pkg-highlight": "^9.15.6",
+    "pub-generator": "v2.4.2",
+    "pub-pkg-editor": "^1.5.8",
+    "pub-pkg-font-awesome": "^3.0.3",
+    "pub-pkg-font-open-sans": "^1.5.1",
+    "pub-pkg-google-oauth": "^2.0.2",
+    "pub-pkg-highlight": "^9.18.1",
     "pub-pkg-jquery": "^1.12.4",
-    "pub-pkg-prism": "^2.0.3",
-    "pub-pkg-seo": "^1.0.7",
-    "pub-resolve-opts": "^1.7.5",
-    "pub-serve-sessions": "^1.1.1",
-    "pub-src-fs": "^2.0.8",
-    "pub-src-github": "^1.3.9",
-    "pub-src-http": "^1.0.12",
-    "pub-src-redis": "^1.2.5",
-    "pub-theme-doc": "^1.1.13",
-    "pub-util": "^3.0.8",
+    "pub-pkg-prism": "^2.0.4",
+    "pub-pkg-seo": "^1.0.10",
+    "pub-resolve-opts": "^1.7.6",
+    "pub-serve-sessions": "^1.2.1",
+    "pub-src-fs": "^2.0.9",
+    "pub-src-github": "^1.3.10",
+    "pub-src-http": "^1.1.1",
+    "pub-src-redis": "^1.3.0",
+    "pub-theme-doc": "^1.1.14",
+    "pub-util": "^3.0.9",
     "send": "^0.17.1",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.3.0",
     "through2": "^3.0.1"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
-    "tape": "^4.11.0"
+    "eslint": "^6.8.0",
+    "tape": "^4.13.2"
   },
   "files": [
     "bin/",
@@ -53,8 +51,7 @@
     "server.js"
   ],
   "scripts": {
-    "test": "tape test/*.js",
-    "lint": "eslint ."
+    "test": "eslint . && tape test/*.js"
   },
   "keywords": [
     "markdown",
@@ -67,6 +64,6 @@
     "type": "git",
     "url": "git://github.com/jldec/pub-server.git"
   },
-  "author": "jurgen leschner",
+  "author": "Jürgen Leschner",
   "license": "MIT"
 }

@@ -1,7 +1,6 @@
 
-# pub-server <br>
-[![Azure Build Status](https://dev.azure.com/jldec/pub-server/_apis/build/status/jldec.pub-server?branchName=master)](https://dev.azure.com/jldec/pub-server/_build/latest?definitionId=1&branchName=master)
-[![Build Status](https://api.travis-ci.org/jldec/pub-server.svg?branch=master)](https://travis-ci.org/jldec/pub-server)
+# pub-server
+![CI](https://github.com/jldec/pub-server/workflows/CI/badge.svg)
 
 [Docs](https://jldec.github.io/pub-doc/)
 
@@ -40,7 +39,7 @@ npm install -g pub-server
 
 ## usage
 
-- `pub` (with no options) serves `*.md` in the current directory or looks for a `pub-config.js`. The default theme is useful for previewing GitHub README.md files like this one. The server will watch for changes and update http://localhost:3001/ whenever markdown files or CSS or other static files are saved.
+- `pub` (with no options) serves `*.md` in the current directory or looks for a `pub-config.js`. The default theme is useful for previewing GitHub README.md files like this one. The server will watch for changes and update http://localhost:3001/ whenever markdown files or CSS or other static files are saved. On macOS, the url will be auto-opened in the browser; use `pub -A` to prevent this.
 
 - `pub -O` generates .html and other static files (including generator + editor) to `./out`.
 
@@ -49,10 +48,11 @@ npm install -g pub-server
 - `pub -h` shows the usage info below:
 
 ```
-pub-server v2.0.2
+pub-server v2.1.0
 
 usage: pub [opts] [dir]
 opts:
+  -A, --no-open            disable auto-open in browser (mac only)
   -p, --port <port>        server port [3001]
   -t, --theme <name>       theme module-name or dir, repeatable (default: [])
   -o, --output-path <dir>  output dir [./out]
