@@ -1,3 +1,10 @@
+##### April 26, 2020 v2.2.0
+- bump to marked v1.0.0
+- support new marked plugin api with `generator.marked.use()` instead of patching `generator.renderer`
+- default to non-mangled autolinked email addresses (override by setting `opts.mangleEmails:true`)
+- removed `eachLinkIn` handlebars helper - not being used
+
+
 ##### March 22, 2020 v2.1.0
 - bump dependencies
 - tested with Node versions 10.x, 12.x and 13.x. using GitHub Actions
