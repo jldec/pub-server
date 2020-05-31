@@ -1,9 +1,15 @@
+##### May 31, 2020 v2.3.0
+- support `output.overrideOpts` for `pub -O`
+- `pub -S` no longer defaults to serving last static file instead of 404
+- Improved page and layout wrapper divs unless `opts.renderPageLayoutOld`
+- marked-forms v4.0.0 with `opts.allowSpacesInLinks` to patch link tokenizer (previously always auto-patched)
+- pub-src-fs v2.1.0 with `opts.dirsSame` to sort directories together with files
+
 ##### April 26, 2020 v2.2.0
 - bump to marked v1.0.0
 - support new marked plugin api with `generator.marked.use()` instead of patching `generator.renderer`
 - default to non-mangled autolinked email addresses (override by setting `opts.mangleEmails:true`)
 - removed `eachLinkIn` handlebars helper - not being used
-
 
 ##### March 22, 2020 v2.1.0
 - bump dependencies

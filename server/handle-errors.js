@@ -46,7 +46,7 @@ module.exports = function handleErrors(server) {
     var ext = ppath.extname(req.path);
     if ((!ext || /\.htm|\.html/i.test(ext)) && !u.size(req.query)) return error(404, req, res);
 
-    debug('404 %s', req.originalUrl);
+    debug('notFound 404 %s', req.originalUrl);
     res.status(404).end();
   }
 
@@ -61,16 +61,10 @@ module.exports = function handleErrors(server) {
 
   // general purpose error response
   function error(status, req, res, msg) {
-    debug('%s %s', status, req.originalUrl);
+    debug('error %s %s', status, req.originalUrl);
     msg = msg || '';
 
     var page = generator.page$['/' + status];
-
-    // 404 with no matching status page => redirect to home
-    if (!page && status === 404) {
-      if (generator.home) return res.redirect(302, '/');
-      if (server.statics.defaultFile) return res.redirect(302, server.statics.defaultFile);
-    }
 
     // avoid exposing error pages unless authorized
     if (page) {

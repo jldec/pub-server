@@ -60,10 +60,19 @@ function pubServer(opts) {
   //--//--//--//--//--//--//--//--//--//--//--//
 
   function run() {
-    generator.load(function(err) {
-      if (err) return log(err);
+    if (opts.outputOnly) {
 
-      if (opts.outputOnly) {
+      var output =  opts.outputs[0];
+      if (!output) return log('No output configured.');
+
+      if (output.overrideOpts) {
+        log('output only - override opts', output.overrideOpts);
+        u.assign(opts, output.overrideOpts);
+      }
+
+      generator.load(function(err) {
+        if (err) return log(err);
+
         generator.outputPages(function(err, result) {
           if (err) { log(err); }
           log('output %s generated pages', u.flatten(result).length);
@@ -72,10 +81,17 @@ function pubServer(opts) {
         var statics = require('./server/serve-statics')(opts, function(){
           statics.outputAll();
         });
+
         require('./server/serve-scripts')(opts).outputAll(generator);
+
         generator.unload();
-        return;
-      }
+      });
+
+      return;
+    }
+
+    generator.load(function(err) {
+      if (err) return log(err);
 
       if (opts.logPages) {
         generator.logPages();

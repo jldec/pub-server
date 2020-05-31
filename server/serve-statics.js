@@ -44,7 +44,6 @@ module.exports = function serveStatics(opts, cb) {
 
   self.file$ = {};  // maps each possible file request path -> staticPath
   self.scanCnt = 0; // how many scans have been completed
-  self.defaultFile = ''; // default file to serve if no other pages available
   self.server;      // initialized by self.serveRoutes(server)
 
   // global opts
@@ -163,7 +162,6 @@ module.exports = function serveStatics(opts, cb) {
   function mapAllFiles() {
     var file$ = {};
     var indexFileSlash = self.trailingSlash ? '/' : '';
-    var dfile = '';
 
     // use reverse list so that first statics in config win e.g. over packages
     u.each(staticPathsRev, function(sp) {
@@ -183,13 +181,11 @@ module.exports = function serveStatics(opts, cb) {
           log('duplicate static %s\n  %s\n  %s', file, file$[reqPath].sp.path, sp.path);
         }
         file$[reqPath] = {sp:sp, file:file}; // map reqPath to spo
-        if (/^\/[^/]+\.(htm|html)$/i.test(reqPath)) { dfile = reqPath; }
       });
     });
 
     // replace old map with recomputed map
     self.file$ = file$;
-    self.defaultFile = dfile;
   }
 
   // only serve files in self.file$
