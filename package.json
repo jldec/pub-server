@@ -1,6 +1,6 @@
 {
   "name": "pub-server",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "markdown site generator, web server, and editor",
   "main": "server.js",
   "preferGlobal": true,
@@ -41,7 +41,7 @@
     "through2": "^3.0.1"
   },
   "devDependencies": {
-    "eslint": "^7.1.0",
+    "eslint": "^7.2.0",
     "tape": "^5.0.1"
   },
   "files": [
