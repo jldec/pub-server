@@ -29,7 +29,8 @@ $(function(){
 
   var $b;
 
-  if (window.parent.location.pathname.match(/\/pub\/$/)) {
+  if (window.parent.location !== window.location) {
+    // in pub-editor frame
     $.pubEditor = true;
     $b = $('<div class="pub-button" title="Close editor">Close</div>').css(style);
     $('body').prepend($b);
