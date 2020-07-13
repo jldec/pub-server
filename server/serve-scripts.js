@@ -114,14 +114,6 @@ module.exports = function serveScripts(opts) {
       });
     }
 
-    // admin api
-    app.get('/admin/flushCaches', function(req, res) {
-      generator.flushCaches(function(err, results) {
-        if (err) return res.status(500).send(err);
-        res.status(200).send(results);
-      });
-    });
-
     app.get('/admin/reloadSources', function(req, res) {
       res.send(generator.reloadSources(req.query.src));
     });
