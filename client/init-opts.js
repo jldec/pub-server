@@ -22,8 +22,11 @@ require('pub-src-github'); // dummy require for browserify
 
 module.exports = function initOpts(cb) {
   cb = u.onceMaybe(cb);
-  // console.log(location.pathname)
-  $.getJSON(pubRef.relPath + '/pub/_opts.json')
+
+  var staticRoot = location.pathname.slice(0, location.pathname.indexOf(pubRef.href));
+  debug('initOpts staticRoot: "' + staticRoot + '"');
+
+  $.getJSON(staticRoot + '/pub/_opts.json')
     .fail(function(jqXHR) { cb(new Error(jqXHR.responseText)); })
     .done(function(respData) {
 
@@ -31,12 +34,11 @@ module.exports = function initOpts(cb) {
       // see pub-server serve-scripts
       var opts = respData;
 
+      // inject runtime-inferred staticRoot into opts
+      opts.staticRoot = staticRoot;
+
       // enable debug tracing on client
       dbg.enable(opts.dbg);
-
-      // auto-infer staticRoot
-      opts.staticRoot = location.pathname.slice(0,location.pathname.length - pubRef.href.length);
-      debug('opts.staticRoot: "' + opts.staticRoot + '"');
 
       var ab = asyncbuilder(function(err) { cb(err, opts); });
 

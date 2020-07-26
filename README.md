@@ -1,6 +1,6 @@
 
 # pub-server
-![CI](https://github.com/jldec/pub-server/workflows/CI/badge.svg)
+[![CI](https://github.com/jldec/pub-server/workflows/CI/badge.svg)](https://github.com/jldec/pub-server/actions)
 
 [Docs](https://jldec.github.io/pub-doc/)
 

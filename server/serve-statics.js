@@ -50,7 +50,7 @@ module.exports = function serveStatics(opts, cb) {
 
   // server retry with extensions when requested file not found - array
   self.extensions = ('extensions' in opts) ? opts.extensions :
-    noOutputExtensions ? [] : ['.htm', '.html'];
+    noOutputExtensions ? [] : ['.htm', '.html', '.json'];
 
   // server retry with trailing slash (similar to extensions) - bool
   self.trailingSlash = 'noTrailingSlash' in opts ? !opts.noTrailingSlash : true;

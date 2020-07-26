@@ -1,3 +1,11 @@
+##### July 26, 2020 v2.4.0
+- improved editor with configurable opts.editorPrefix
+- 2-level pub-src-redis cache for staging edits of markdown source files  
+  this enables a workflow with a staging endpoint for editors to preview unpublished content
+- editor UI enhancements for file commit and file revert
+- publish minified browserscripts
+- serve json files as static paths without extension
+
 ##### May 31, 2020 v2.3.0
 - support `output.overrideOpts` for `pub -O`
 - `pub -S` no longer defaults to serving last static file instead of 404

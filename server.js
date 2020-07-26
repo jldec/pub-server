@@ -114,7 +114,7 @@ function pubServer(opts) {
 
     server.app.disable('x-powered-by');
 
-    // see https://expressjs.com/en/guide/behind-proxies.html
+    // see https://expressjs.com/en/guide/behind-proxies.html - boolean type sensitive
     server.app.set('trust proxy', opts['trust proxy'] || false);
 
     // log(err) shouldn't throw anymore

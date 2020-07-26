@@ -39,7 +39,7 @@ initOpts(function(err, opts) {
         // hook custom timers
         generator.emit('init-timers', false);
 
-        // slightly ugly way to notify client (editor) that generator is ready
+        // initialize editor-ui
         if (window.onGeneratorLoaded) {
           window.onGeneratorLoaded(generator);
           debug('ui loaded');

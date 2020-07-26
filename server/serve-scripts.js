@@ -11,11 +11,14 @@
  * copyright 2015-2020, Jürgen Leschner - github.com/jldec - MIT license
  */
 
+/* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
+
 var debug = require('debug')('pub:scripts');
 var u = require('pub-util');
 var through = require('through2');
 var fspath = require('path'); // for platform specific path.join
 var fs = require('fs-extra');
+var uglify = require('uglify-es');
 
 module.exports = function serveScripts(opts) {
 
@@ -32,7 +35,9 @@ module.exports = function serveScripts(opts) {
   browserify.buildBundle = require('browserify-middleware/lib/build-bundle.js');
 
   /* browserify pregen with production is slow */
-  if ((opts.outputOnly || opts.minify) && !opts.dbg) { browserify.settings.mode = 'production'; }
+  if ((opts.outputOnly || opts.minify) && !opts.dbg) {
+    browserify.settings.mode = 'production';
+  }
 
   browserify.settings( { ignore: ['resolve', 'osenv', 'tmp'],
                          ignoreMissing: false } );
@@ -114,14 +119,6 @@ module.exports = function serveScripts(opts) {
       });
     }
 
-    // admin api
-    app.get('/admin/flushCaches', function(req, res) {
-      generator.flushCaches(function(err, results) {
-        if (err) return res.status(500).send(err);
-        res.status(200).send(results);
-      });
-    });
-
     app.get('/admin/reloadSources', function(req, res) {
       res.send(generator.reloadSources(req.query.src));
     });
@@ -143,7 +140,8 @@ module.exports = function serveScripts(opts) {
     });
   }
 
-  // publish browserscripts
+  // publish browserscripts with uglify logic from
+  // https://github.com/ForbesLindesay/browserify-middleware/blob/master/lib/build-response.js
   function outputAll(generator) {
 
     var output = (opts.outputs && opts.outputs[0]);
@@ -163,17 +161,26 @@ module.exports = function serveScripts(opts) {
 
       var out = fspath.join(output.path, script.route);
       fs.ensureFileSync(out);
-      var ws = fs.createWriteStream(out);
       var time = u.timer();
-      ws.on('finish', function() {
-        log('output script: %s (%d bytes, %d ms)', out, ws.bytesWritten, time());
-      });
-      ws.on('error', log);
 
       // reuse browserify-middleware with current production or debug options
       var options = browserify.settings.normalize(script.opts);
       var bundler = browserify.buildBundle(script.path, options);
-      bundler.bundle().pipe(ws);
+      bundler.bundle(function (err, buf) {
+        if (err) return log(err);
+        var str = buf.toString();
+        if (!opts.dbg) {
+          try {
+            // slow! TODO: offer a way to cache between builds
+            str = uglify.minify(str, {}).code;
+          }
+          catch(e) {}
+        }
+        fs.writeFile(out, str, function(err) {
+          if (err) return log(err);
+          log('output script: %s (%d bytes, %d ms)', out, str.length, time());
+        });
+      });
     });
 
     if (opts.editor) {
