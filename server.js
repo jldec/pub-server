@@ -133,11 +133,12 @@ function pubServer(opts) {
     server.emit('init-app-first');
     server.sessions.authorizeRoutes();
 
-    if (!opts.staticOnly) {
-      require('./server/serve-pages')(server);
-      server.scripts = require('./server/serve-scripts')(opts).serveRoutes(server);
-    }
     server.statics = require('./server/serve-statics')(opts).serveRoutes(server);
+
+    if (!opts.staticOnly) {
+      server.scripts = require('./server/serve-scripts')(opts).serveRoutes(server);
+      require('./server/serve-pages')(server);
+    }
 
     server.emit('init-app-last');
 

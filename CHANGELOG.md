@@ -1,3 +1,10 @@
+##### August 2, 2020 v2.4.2
+- prioritize serving static files and scripts over generated pages (server-only)
+- fix upload template in pub-pkg-editor
+
+##### July 26, 2020 v2.4.1
+- fix missing generator-plugin in published pub-pkg-editor
+
 ##### July 26, 2020 v2.4.0
 - improved editor with configurable opts.editorPrefix
 - 2-level pub-src-redis cache for staging edits of markdown source files  
