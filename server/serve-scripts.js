@@ -229,7 +229,7 @@ module.exports = function serveScripts(opts) {
       return u.omit(output, 'files', 'src');
     });
     sOpts.sources = u.map(opts.sources, function(source) {
-      var rawSource = u.omit(source, 'files', 'src', 'file$', 'fragments', 'updates', 'snapshots', 'drafts', 'cache');
+      var rawSource = u.omit(source, 'files', 'src', 'file$', 'fragments', 'updates', 'snapshots', 'drafts', 'cache', 'redisOpts');
       rawSource.files = source.type === 'FILE' ?
         generator.serializeFiles(source.files) :
         source.files;

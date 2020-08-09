@@ -1,3 +1,7 @@
+##### August 9, 2020 v2.4.3
+- redisOpts server-only
+- pub-src-redis respects pub-src-github commit message
+
 ##### August 2, 2020 v2.4.2
 - prioritize serving static files and scripts over generated pages (server-only)
 - fix upload template in pub-pkg-editor
