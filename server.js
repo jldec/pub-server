@@ -15,6 +15,7 @@ var exec = require('child_process').exec;
 var events = require('events');
 var path = require('path');
 var u = require('pub-util');
+var asyncbuilder = require('asyncbuilder');
 
 if (require.main === module) {
   pubServer().run();
@@ -60,8 +61,10 @@ function pubServer(opts) {
   //--//--//--//--//--//--//--//--//--//--//--//
 
   function run() {
+
     if (opts.outputOnly) {
 
+      // only support single output for now
       var output =  opts.outputs[0];
       if (!output) return log('No output configured.');
 
@@ -72,19 +75,10 @@ function pubServer(opts) {
 
       generator.load(function(err) {
         if (err) return log(err);
-
-        generator.outputPages(function(err, result) {
+        outputAll(output, function(err) {
           if (err) { log(err); }
-          log('output %s generated pages', u.flatten(result).length);
+          generator.unload();
         });
-
-        var statics = require('./server/serve-statics')(opts, function(){
-          statics.outputAll();
-        });
-
-        require('./server/serve-scripts')(opts).outputAll(generator);
-
-        generator.unload();
       });
 
       return;
@@ -103,6 +97,34 @@ function pubServer(opts) {
       generator.listen(true);
 
       if (!opts['no-server']) { expressApp(); }
+    });
+  }
+
+  function outputAll(output, cb) {
+
+    var ab = asyncbuilder(function(err, a) {
+      if (err) return cb(err);
+      log('output %s pages, %s scripts, %s statics', a[0].length, a[1].length, a[2].length);
+      if (output.fileMap) {
+        output.src.put( [ { path:'/filemap.json', text:JSON.stringify(u.flatten(a),null,2) } ], function(err) {
+          if (err) log(err);
+        });
+      }
+      cb();
+    });
+
+    var pagesDone = ab.asyncAppend();
+    var scriptsDone = ab.asyncAppend();
+    var staticsDone = ab.asyncAppend();
+    ab.complete();
+
+    generator.outputPages(output, pagesDone);
+
+    require('./server/serve-scripts')(opts).outputAll(output, generator, scriptsDone);
+
+    // wait for static scan to complete before starting output
+    var statics = require('./server/serve-statics')(opts, function(){
+      statics.outputAll(output, staticsDone);
     });
   }
 
