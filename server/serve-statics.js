@@ -241,7 +241,7 @@ module.exports = function serveStatics(opts, cb) {
     if (!count) return cb(null, filemap);
 
     var done = u.after(count, function() {
-      cb(null, filemap);
+      cb(null, u.sortBy(filemap, 'path'));
     });
 
     var omit = output.omitRoutes;

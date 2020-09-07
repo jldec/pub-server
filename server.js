@@ -105,8 +105,16 @@ function pubServer(opts) {
     var ab = asyncbuilder(function(err, a) {
       if (err) return cb(err);
       log('output %s pages, %s scripts, %s statics', a[0].length, a[1].length, a[2].length);
+
+      var filemap = u.flatten(a);
+      // check for duplicates assuming case-insensitive output file system
+      var dup$ = {};
+      u.each(filemap, function(file) {
+        if (dup$[file.path.toLowerCase()]) return log('WARNING: duplicate file in output:', file.path);
+        dup$[file.path.toLowerCase()] = 1;
+      })
       if (output.fileMap) {
-        output.src.put( [ { path:'/filemap.json', text:JSON.stringify(u.flatten(a),null,2) } ], function(err) {
+        output.src.put( [ { path:'/filemap.json', text:JSON.stringify(filemap,null,2) } ], function(err) {
           if (err) log(err);
         });
       }
