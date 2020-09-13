@@ -112,7 +112,7 @@ function pubServer(opts) {
       u.each(filemap, function(file) {
         if (dup$[file.path.toLowerCase()]) return log('WARNING: duplicate file in output:', file.path);
         dup$[file.path.toLowerCase()] = 1;
-      })
+      });
       if (output.fileMap) {
         output.src.put( [ { path:'/filemap.json', text:JSON.stringify(filemap,null,2) } ], function(err) {
           if (err) log(err);

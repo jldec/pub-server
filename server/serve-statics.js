@@ -259,7 +259,7 @@ module.exports = function serveStatics(opts, cb) {
       var src = path.join(spo.sp.src.path, spo.file);
       var dest = path.join(output.path, spo.sp.route, spo.file);
 
-      var mapfile = { path:ppath.join(spo.sp.route, spo.file) }
+      var mapfile = { path:ppath.join(spo.sp.route, spo.file) };
       if (reqPath !== mapfile.path) {
         mapfile.href = reqPath;
       }
