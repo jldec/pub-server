@@ -38,10 +38,6 @@ module.exports = function serveStatics(opts, cb) {
   var staticPaths = opts.staticPaths;
   var staticPathsRev = opts.staticPaths.slice(0).reverse();
 
-  var defaultOutput = (opts.outputs && opts.outputs[0]);
-  var outputExtension = defaultOutput && defaultOutput.extension;
-  var noOutputExtensions = outputExtension === '';
-
   self.file$ = {};  // maps each possible file request path -> staticPath
   self.scanCnt = 0; // how many scans have been completed
   self.server;      // initialized by self.serveRoutes(server)
@@ -49,20 +45,17 @@ module.exports = function serveStatics(opts, cb) {
   // global opts
 
   // server retry with extensions when requested file not found - array
-  self.extensions = ('extensions' in opts) ? opts.extensions :
-    noOutputExtensions ? [] : ['.htm', '.html', '.json'];
+  self.extensions = ('extensions' in opts) ? opts.extensions : ['.htm', '.html', '.json'];
 
   // server retry with trailing slash (similar to extensions) - bool
   self.trailingSlash = 'noTrailingSlash' in opts ? !opts.noTrailingSlash : true;
 
   // additionally serve 'path/index' as just 'path' (1st match wins) - array
   // [inverse of generator.output() for pages with _href = directory]
-  self.indexFiles =
-    'indexFiles' in opts ? opts.indexFiles :
-    noOutputExtensions ? ['index'] : ['index.html'];
+  self.indexFiles = 'indexFiles' in opts ? opts.indexFiles : ['index.html'];
 
   // send Content-Type=text/html header for extensionless files
-  self.noHtmlExtensions = opts.noHtmlExtensions || noOutputExtensions;
+  self.noHtmlExtensions = opts.noHtmlExtensions;
 
   if (self.indexFiles && self.indexFiles.length) {
     self.indexFilesRe = new RegExp(
@@ -141,7 +134,7 @@ module.exports = function serveStatics(opts, cb) {
       if (src.isfile()) { sp.depth = 1; }
       sp.sendOpts = u.assign(
         u.pick(sp, 'maxAge', 'lastModified', 'etag'),
-        { dotfiles:'ignore',
+        { dotfiles:'allow',
           index:false,      // handled at this level
           extensions:false, // ditto
           root:src.path } );
@@ -235,22 +228,23 @@ module.exports = function serveStatics(opts, cb) {
     doit();
   }
 
-  // copy static files to defaultOutput preserving reqPath routes
+  // copy static files to output preserving reqPath routes
   // no error propagation, just log(err)
-  function outputAll(cb) {
+  // TODO: use output.src instead of fs.copy
+  function outputAll(output, cb) {
     cb = u.maybe(cb);
+    output = output || opts.outputs[0];
 
     var count = u.size(self.file$);
-    var result = [];
+    var filemap = [];
 
-    if (!defaultOutput || !count) return cb(log('statics.outputAll: no output'));
+    if (!count) return cb(null, filemap);
 
     var done = u.after(count, function() {
-      log('output %s %s static files', defaultOutput.path, result.length);
-      cb(result);
+      cb(null, u.sortBy(filemap, 'path'));
     });
 
-    var omit = defaultOutput.omitRoutes;
+    var omit = output.omitRoutes;
     if (omit && !u.isArray(omit)) { omit = [omit]; }
 
     // TODO: re-use similar filter in generator.output and serve-scripts.outputAll
@@ -263,12 +257,17 @@ module.exports = function serveStatics(opts, cb) {
       if (filterRe.test(reqPath)) return done();
 
       var src = path.join(spo.sp.src.path, spo.file);
-      var dest = path.join(defaultOutput.path, spo.sp.route, spo.file);
+      var dest = path.join(output.path, spo.sp.route, spo.file);
+
+      var mapfile = { path:ppath.join(spo.sp.route, spo.file) };
+      if (reqPath !== mapfile.path) {
+        mapfile.href = reqPath;
+      }
 
       // copy will create dirs if necessary
       fs.copy(src, dest, function(err) {
         if (err) return done(log(err));
-        result.push(dest);
+        filemap.push(mapfile);
         done();
       });
 

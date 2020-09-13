@@ -17,7 +17,6 @@ var debug = require('debug')('pub:scripts');
 var u = require('pub-util');
 var through = require('through2');
 var fspath = require('path'); // for platform specific path.join
-var fs = require('fs-extra');
 var uglify = require('uglify-es');
 
 module.exports = function serveScripts(opts) {
@@ -118,34 +117,16 @@ module.exports = function serveScripts(opts) {
         res.send(serializeOpts(server.generator));
       });
     }
-
-    app.get('/admin/reloadSources', function(req, res) {
-      res.send(generator.reloadSources(req.query.src));
-    });
-
-    app.get('/admin/outputPages', function(req, res) {
-      generator.outputPages(req.query.output, function(err, results) {
-        if (err) return res.status(500).send(err);
-        res.status(200).send(u.flatten(results));
-      });
-    });
-
-    app.get('/admin/logPages', function(req, res) {
-      res.send(generator.logPages());
-    });
-
-    app.get('/admin/reload', function(req, res) {
-      generator.reload();
-      res.status(200).send('OK');
-    });
   }
 
-  // publish browserscripts with uglify logic from
+  // output all browserscripts with uglify logic from
   // https://github.com/ForbesLindesay/browserify-middleware/blob/master/lib/build-response.js
-  function outputAll(generator) {
+  function outputAll(output, generator, cb) {
+    cb = u.maybe(cb);
+    output = output || opts.outputs[0];
 
-    var output = (opts.outputs && opts.outputs[0]);
-    if (!output) return log('scripts.outputAll: no output');
+    var files = [];
+    var filemap = [];
 
     var omit = output.omitRoutes;
     if (omit && !u.isArray(omit)) { omit = [omit]; }
@@ -159,8 +140,6 @@ module.exports = function serveScripts(opts) {
     u.each(self.scripts, function(script) {
       if (filterRe.test(script.route)) return;
 
-      var out = fspath.join(output.path, script.route);
-      fs.ensureFileSync(out);
       var time = u.timer();
 
       // reuse browserify-middleware with current production or debug options
@@ -176,20 +155,22 @@ module.exports = function serveScripts(opts) {
           }
           catch(e) {}
         }
-        fs.writeFile(out, str, function(err) {
-          if (err) return log(err);
-          log('output script: %s (%d bytes, %d ms)', out, str.length, time());
-        });
+        files.push( { path:script.route, text:str } );
+        filemap.push( { path:script.route } );
+        log('output script: %s (%d bytes, %d ms)', script.route, str.length, time());
       });
     });
 
     if (opts.editor) {
-      var out = fspath.join(output.path, '/pub/_opts.json');
-      fs.ensureFileSync(out);
-      fs.outputJson(out, serializeOpts(generator, true, output), function(err) {
-        log(err || 'output opts: %s', out);
-      });
+      var optsPath = '/pub/_opts.json';
+      files.push( { path:optsPath, text:JSON.stringify(serializeOpts(generator, true, output)) } );
+      filemap.push( { path:optsPath } );
     }
+
+    output.src.put(files, function(err) {
+      if (err) return cb(err, filemap);
+      cb(null, filemap);
+    });
   }
 
   // browserify transform for sending plugins
