@@ -13,6 +13,7 @@
     - use redirect template (not provided) to generate html-based redirects for aliases
   - page.noextension
     - prevents auto .html extension for that page on output
+- Fix security warning in pub-src-http related to [node-fetch](https://github.com/node-fetch/node-fetch/security/advisories/GHSA-w7rc-rwvf-8q5r).
 
 #### August 9, 2020 v2.4.3
 - redisOpts server-only
