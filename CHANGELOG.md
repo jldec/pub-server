@@ -1,3 +1,9 @@
+#### November 08, 2020, v2.6.0
+- dependencies
+- marked v1.2.3 with more commonmark cleanup
+- env var DISABLE_AUTH
+- only respect nopublish flag on pages in production
+
 #### September 13, 2020, v2.5.0
 - output.fileMap
   - pub -O will generate output manifest in filemap.json with pages, statics, and scripts

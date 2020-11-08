@@ -161,7 +161,9 @@ function pubServer(opts) {
     server.app.use(require('compression')());
 
     server.emit('init-app-first');
-    server.sessions.authorizeRoutes();
+    if (!(opts.auth && opts.auth.disabled)) {
+      server.sessions.authorizeRoutes();
+    }
 
     server.statics = require('./server/serve-statics')(opts).serveRoutes(server);
 
