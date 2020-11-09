@@ -18,6 +18,7 @@ var u = require('pub-util');
 var through = require('through2');
 var fspath = require('path'); // for platform specific path.join
 var uglify = require('uglify-es');
+var asyncbuilder = require('asyncbuilder');
 
 module.exports = function serveScripts(opts) {
 
@@ -137,8 +138,17 @@ module.exports = function serveScripts(opts) {
                        (omit ? '|' + u.map(omit, u.escapeRegExp).join('|') : '') +
                                ')');
 
+    var ab = asyncbuilder(function(err, a) {
+      if (err) return cb(err, filemap);
+      output.src.put(files, function(err) {
+        if (err) return cb(err, filemap);
+        cb(null, filemap);
+      });
+    });
+
     u.each(self.scripts, function(script) {
       if (filterRe.test(script.route)) return;
+      var scriptDone = ab.asyncAppend();
 
       var time = u.timer();
 
@@ -146,7 +156,11 @@ module.exports = function serveScripts(opts) {
       var options = browserify.settings.normalize(script.opts);
       var bundler = browserify.buildBundle(script.path, options);
       bundler.bundle(function (err, buf) {
-        if (err) return log(err);
+        if (err) {
+          log(err);
+          scriptDone(err, script.route);
+          return;
+        }
         var str = buf.toString();
         if (!opts.dbg) {
           try {
@@ -158,19 +172,19 @@ module.exports = function serveScripts(opts) {
         files.push( { path:script.route, text:str } );
         filemap.push( { path:script.route } );
         log('output script: %s (%d bytes, %d ms)', script.route, str.length, time());
+        scriptDone(null, script.route);
       });
     });
 
     if (opts.editor) {
       var optsPath = '/pub/_opts.json';
-      files.push( { path:optsPath, text:JSON.stringify(serializeOpts(generator, true, output)) } );
+      var optsStr = JSON.stringify(serializeOpts(generator, true, output));
+      files.push( { path:optsPath, text:optsStr } );
       filemap.push( { path:optsPath } );
+      log('output %s (%d bytes)', optsPath, optsStr.length);
     }
 
-    output.src.put(files, function(err) {
-      if (err) return cb(err, filemap);
-      cb(null, filemap);
-    });
+    ab.complete();
   }
 
   // browserify transform for sending plugins

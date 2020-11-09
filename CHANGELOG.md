@@ -1,3 +1,7 @@
+#### November 09, 2020, v2.7.0
+- fixed race when publishing browserScripts with pub -O
+- marked editor help pages as writable
+
 #### November 08, 2020, v2.6.0
 - dependencies
 - marked v1.2.3 with more commonmark cleanup
