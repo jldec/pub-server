@@ -138,7 +138,8 @@ module.exports = function serveScripts(opts) {
                        (omit ? '|' + u.map(omit, u.escapeRegExp).join('|') : '') +
                                ')');
 
-    var ab = asyncbuilder(function(err, a) {
+    // builder results collected in files and filemap
+    var ab = asyncbuilder(function(err) {
       if (err) return cb(err, filemap);
       output.src.put(files, function(err) {
         if (err) return cb(err, filemap);

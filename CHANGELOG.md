@@ -1,3 +1,6 @@
+#### November 09, 2020, v2.7.1
+- linter fix
+
 #### November 09, 2020, v2.7.0
 - fixed race when publishing browserScripts with pub -O
 - marked editor help pages as writable
