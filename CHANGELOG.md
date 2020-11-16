@@ -1,3 +1,7 @@
+#### November 16, 2020, v2.7.2
+- improve resolution of files in pub packages inside node_modules
+- bump marked v1.2.4
+
 #### November 09, 2020, v2.7.1
 - linter fix
 
