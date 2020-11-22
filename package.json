@@ -1,6 +1,6 @@
 {
   "name": "pub-server",
-  "version": "2.7.2",
+  "version": "2.7.3",
   "description": "markdown site generator, web server, and editor",
   "main": "server.js",
   "preferGlobal": true,
@@ -18,7 +18,7 @@
     "express": "^4.17.1",
     "fs-extra": "^9.0.1",
     "mime": "^2.4.6",
-    "pub-generator": "^4.1.1",
+    "pub-generator": "^4.1.2",
     "pub-pkg-editor": "^2.0.3",
     "pub-pkg-font-awesome": "^3.0.4",
     "pub-pkg-font-open-sans": "^1.5.1",

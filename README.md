@@ -48,7 +48,7 @@ npm install -g pub-server
 - `pub -h` shows the usage info below:
 
 ```
-pub-server v2.1.0
+pub-server v2.7.3
 
 usage: pub [opts] [dir]
 opts:
