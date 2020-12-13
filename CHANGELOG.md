@@ -1,3 +1,10 @@
+#### December 13, 2020, v2.7.4
+- remove dependency on browserify-middleware which is no longer supported  
+  browserScripts are now auto-bundled using browserify directly  
+  bundles are slightly larger, and a little slower (up-to-date node shims)  
+  bundles are memoized in memory and served with 60 min cache by pub-server
+- bump marked v1.2.6 - allow urls in links and images surrounded with `<url>`
+
 #### November 22, 2020, v2.7.3
 - fix socket.io notifications to work without dependence on jquery
 - bump marked v1.2.5

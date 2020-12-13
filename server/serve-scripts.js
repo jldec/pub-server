@@ -19,6 +19,7 @@ var through = require('through2');
 var fspath = require('path'); // for platform specific path.join
 var uglify = require('uglify-es');
 var asyncbuilder = require('asyncbuilder');
+var browserify = require('browserify');
 
 module.exports = function serveScripts(opts) {
 
@@ -29,57 +30,51 @@ module.exports = function serveScripts(opts) {
   self.serveRoutes = serveRoutes;
   self.outputAll = outputAll;     // for pub -O
 
-  var browserify = require('browserify-middleware');
-
-  // expose build-bundle for output to file
-  browserify.buildBundle = require('browserify-middleware/lib/build-bundle.js');
-
-  /* browserify pregen with production is slow */
-  if ((opts.outputOnly || opts.minify) && !opts.dbg) {
-    browserify.settings.mode = 'production';
-  }
-
-  browserify.settings( { ignore: ['resolve', 'osenv', 'tmp'],
-                         ignoreMissing: false } );
-
-  browserify.settings.production('cache', '1h');
-
   // prepare array of browserscripts including builtins
   self.scripts = u.map(opts.browserScripts, function(script) {
     var o = {
       route: script.route,
       path:  script.path,
-      delay: script.delay,
-      opts:  u.omit(script, 'path', 'route', 'inject', 'maxAge')
+      opts:  u.omit(script, 'path', 'route', 'inject')
     };
-    if ('maxAge' in script) { o.opts.cache = script.maxAge || 'dynamic'; }
     return o;
   });
 
-  self.scripts.push( {
-    route: '/server/pub-sockets.js',
-    path: fspath.join(__dirname, '../client/pub-sockets.js')
-  } );
+  // sockjs scripts
+  if (!opts['no-sockets']) {
+    self.scripts.push( {
+      route: '/server/pub-sockets.js',
+      path: fspath.join(__dirname, '../client/pub-sockets.js'),
+      opts: {}
+    } );
+  }
 
   // editor scripts
   if (opts.editor) {
-
     self.scripts.push( {
       route: '/pub/pub-ux.js',
-      path: fspath.join(__dirname, '../client/pub-ux.js')
+      path: fspath.join(__dirname, '../client/pub-ux.js'),
+      opts: {}
     } );
-
     self.scripts.push( {
       route: '/pub/_generator.js',
       path:  fspath.join(__dirname, '../client/_generator.js'),
+      opts: {}
     } );
-
     self.scripts.push( {
       route: '/pub/_generator-plugins.js',
       path:  fspath.join(__dirname, '../client/_generator-plugins.js'),
       opts:  { transform: [transformPlugins] }
     } );
   }
+
+  // prepare for bundling by serveRoutes or outputAll
+  u.each(self.scripts, function(script) {
+    script._bundler = browserify(
+      script.path,
+      { debug:opts.dbg, transform:script.opts.transform }
+    ).ignore(['resolve', 'osenv', 'tmp']);
+  });
 
   return;
 
@@ -92,18 +87,26 @@ module.exports = function serveScripts(opts) {
 
     // route browserscripts, including builtins
     u.each(self.scripts, function(script) {
-      var handler = browserify(script.path, script.opts);
-      if (script.delay) {
-        var delayed = function(req, res) {
-          debug(req.path, 'waiting', script.delay);
-          setTimeout(function() {
-            debug(req.path, 'done waiting', script.delay);
-            handler(req, res);
-          }, u.ms(script.delay));
-        };
-      }
-      app.get(script.route, delayed || handler);
+      app.get(script.route, function(req, res, next) {
+        if (script._buf) return sendBuf(res, script._buf); // send memoised
+        var time = u.timer();
+        script._bundler.bundle(function(err, buf) {
+          debug('bundle: %s (%d bytes, %d ms)', script.path, buf.length, time());
+          if(err) return next(err);
+          script._buf = buf; // memoise
+          sendBuf(res, buf);
+        });
+      });
     });
+
+    // assume all browserScripts are .js, cache on client for 1hr
+    function sendBuf(res, buf) {
+      res.set( {
+        'Content-Type': 'text/javascript',
+        'Cache-Control': 'public, max-age=3600'
+      } );
+      res.send(buf);
+    }
 
     // editor api
     if (opts.editor) {
@@ -153,10 +156,7 @@ module.exports = function serveScripts(opts) {
 
       var time = u.timer();
 
-      // reuse browserify-middleware with current production or debug options
-      var options = browserify.settings.normalize(script.opts);
-      var bundler = browserify.buildBundle(script.path, options);
-      bundler.bundle(function (err, buf) {
+      script._bundler.bundle(function (err, buf) {
         if (err) {
           log(err);
           scriptDone(err, script.route);
