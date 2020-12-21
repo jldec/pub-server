@@ -23,11 +23,11 @@ Feel free to play around - in this instance, your changes will not be recorded.
 Other examples include a [presentation theme](https://github.com/jldec/pub-sample-deck), a [flexbox design](https://github.com/jldec/pub-theme-brief), and a [blog](https://blog.pubblz.com/)
 
 
-![](/screenshots/screen1.png)
+![Screenshot of pub-server editor with pub-theme-pubblog theme](/screenshots/screen1.png)
 
-![](/screenshots/screen.png)
+![Screenshot of pub-server editor with pub-theme-doc theme](/screenshots/screen.png)
 
-![](/screenshots/screen2.png)
+![Screenshot of pub-server editor with pub-theme-brief (flexbox) theme](/screenshots/screen2.png)
 
 ## installation
 
@@ -48,7 +48,7 @@ npm install -g pub-server
 - `pub -h` shows the usage info below:
 
 ```
-pub-server v2.7.3
+pub-server v2.7.4
 
 usage: pub [opts] [dir]
 opts:
@@ -81,7 +81,7 @@ Major dependencies include:
 - [express](https://expressjs.com/)
 - [marked](https://github.com/markedjs/marked)
 - [handlebars](https://handlebarsjs.com/)
-- [browserify](https://github.com/browserify/browserify) and [browserify-middleware](https://github.com/ForbesLindesay/browserify-middleware)
+- [browserify](https://github.com/browserify/browserify)
 - [chokidar](https://github.com/paulmillr/chokidar)
 - [socket.io](https://socket.io/)
 - [passport](https://github.com/jaredhanson/passport)
