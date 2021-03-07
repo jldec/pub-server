@@ -1,3 +1,9 @@
+#### March 07, 2022, v2.7.5
+- bump to marked v2.0.1 - resolves security warning
+- support for .classnames in title strings of image markdown
+- opts.canonicalUrl injects canonical `<link>` on every page  
+  see [pub-pkg-seo](https://github.com/jldec/pub-pkg-seo/)
+
 #### December 13, 2020, v2.7.4
 - remove dependency on browserify-middleware which is no longer supported  
   browserScripts are now auto-bundled using browserify directly  
