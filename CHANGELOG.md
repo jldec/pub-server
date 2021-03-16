@@ -1,4 +1,7 @@
-#### March 07, 2022, v2.7.5
+#### March 16, 2021, v2.7.6
+- pub-pkg-seo v1.2.0 - emits meta tag to noindex,nofollow for page.nocrawl
+
+#### March 07, 2021, v2.7.5
 - bump to marked v2.0.1 - resolves security warning
 - support for .classnames in title strings of image markdown
 - opts.canonicalUrl injects canonical `<link>` on every page  
