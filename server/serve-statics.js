@@ -36,7 +36,8 @@ module.exports = function serveStatics(opts, cb) {
   var self = this;
   var log = opts.log;
   var staticPaths = opts.staticPaths;
-  var staticPathsRev = opts.staticPaths.slice(0).reverse();
+  var staticPathsRev = opts.staticPaths.slice(0).reverse(); // slice(0) makes copy
+  debug(staticPathsRev);
 
   self.file$ = {};  // maps each possible file request path -> staticPath
   self.scanCnt = 0; // how many scans have been completed
@@ -127,7 +128,7 @@ module.exports = function serveStatics(opts, cb) {
     // only construct src, defaults, sendOpts etc. once
     if (!src) {
       sp.name = sp.name || 'staticPath:' + sp.path;
-      sp.depth = sp.depth || opts.staticDepth || 5;
+      sp.depth = sp.depth || opts.staticDepth || 10;
       sp.maxAge = 'maxAge' in sp ? sp.maxAge : '10m';
       sp.includeBinaries = true;
       src = sp.src = fsbase(sp);
@@ -218,6 +219,8 @@ module.exports = function serveStatics(opts, cb) {
     if (self.noHtmlExtensions && !path.extname(spo.file)) {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
     }
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
 
     debug('static %s%s', reqPath, (reqPath !== spo.file ? ' -> ' + spo.file : ''));
 

@@ -73,6 +73,8 @@ module.exports = function servePages(server) {
     var ext = ppath.extname(page._href);
     if (!ext || res.getHeader('Content-Type')) return;
     res.set('Content-Type', mime.getType(ext));
+
+    res.set('Access-Control-Allow-Origin', '*');
   }
 
   function redirects(req, res, next) {
