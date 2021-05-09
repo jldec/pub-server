@@ -1,3 +1,10 @@
+#### May 09, 2021, v2.8.1
+- fix redis security warning
+- Static only (-S) now scans directories to depth 10
+
+#### March 16, 2021, v2.8.0
+- pub-pkg-seo v1.2.0 - emits meta tag to noindex,nofollow for page.nocrawl
+
 #### March 16, 2021, v2.7.6
 - pub-pkg-seo v1.2.0 - emits meta tag to noindex,nofollow for page.nocrawl
 
