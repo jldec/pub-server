@@ -1,3 +1,10 @@
+#### Sep 05, 2021, v2.9.0
+- fix security warning in path-parse (resolve)
+- fix security warning in ws (socket.io)
+- upgrade to marked v3.0.2
+  - breaks GFM forms with trailing whitespace on the delimiter row (see [markedjs/marked#2196](https://github.com/markedjs/marked/issues/2196))
+  - some (mostly harmless) whitespace changes on lists
+
 #### May 09, 2021, v2.8.1
 - fix redis security warning
 - Static only (-S) now scans directories to depth 10
