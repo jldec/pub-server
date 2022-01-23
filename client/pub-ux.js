@@ -2,7 +2,7 @@
  * pub-ux.js
  * browserify entry point for legacy pub-pkg-editor
  *
- * copyright 2015-2020, Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2022 Jürgen Leschner - github.com/jldec - MIT license
 */
 
 /* global $ */

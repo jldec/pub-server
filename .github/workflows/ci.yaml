@@ -6,7 +6,7 @@ jobs:
   test:
     strategy:
       matrix:
-        node: [10, 12, 14, 15]
+        node: [12, 14, 16, 17]
         os:
         - ubuntu-latest
         - macos-latest

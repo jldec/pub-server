@@ -1,3 +1,10 @@
+#### Jan 23, 2022, v2.10.0
+- upgrade to marked v4.0.10 - see [marked-forms](https://github.com/jldec/marked-forms).
+- fix security warning in pub-src-http (node-fetch)
+- upgrade other dependencies include prism.js and highlight.js and pub-theme-doc
+- CI test on node.js 12, 14, 16, 17
+- validate with npm v8.x
+
 #### Sep 05, 2021, v2.9.0
 - fix security warning in path-parse (resolve)
 - fix security warning in ws (socket.io)

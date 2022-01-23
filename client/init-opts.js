@@ -7,7 +7,7 @@
  * possibly by directing browser to gatekeeper for auth roundabout
  * TODO: implement a mechanism to force re-authentication (logout gatekeeper)
  *
- * copyright 2015-2020, Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2022 Jürgen Leschner - github.com/jldec - MIT license
 */
 
 /* global $ */
