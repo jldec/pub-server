@@ -84,6 +84,23 @@ function pubServer(opts) {
       return;
     }
 
+    if (opts.migrate) {
+
+      // only support single output for now
+      var output =  opts.outputs[1];
+      if (!output) return log('No 2nd output (opts.output[1]) configured.');
+
+      generator.load(function(err) {
+        if (err) return log(err);
+        generator.migratePages(output, function(err) {
+          if (err) { log(err); }
+          generator.unload();
+        });
+      });
+
+      return;
+    }
+
     generator.load(function(err) {
       if (err) return log(err);
 

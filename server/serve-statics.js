@@ -194,7 +194,7 @@ module.exports = function serveStatics(opts, cb) {
     // try straight match
     var spo = file$[reqPath];
 
-    if (!spo && !/\/$|\.[^/]+$/.test(reqPath)) {
+    if (!spo && !/\/$/.test(reqPath)) {
 
       // try adding trailing / and redirect if found
       if (self.trailingSlash) {
