@@ -87,7 +87,7 @@ function pubServer(opts) {
     if (opts.migrate) {
 
       // only support single output for now
-      var output =  opts.outputs[1];
+      let output =  opts.outputs[1];
       if (!output) return log('No 2nd output (opts.output[1]) configured.');
 
       generator.load(function(err) {
