@@ -4,7 +4,7 @@
  * used by serve-statics and watch-sources
  * TODO: dedup watches and look at aggregating watch paths with single watch
  *
- * Copyright (c) 2015-2022 Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2024 Jürgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:watch');

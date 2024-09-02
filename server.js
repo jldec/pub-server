@@ -5,7 +5,7 @@
  * invoke directly via node command line, or via require()
  * see: https://nodejs.org/api/modules.html#modules_accessing_the_main_module
  *
- * Copyright (c) 2015-2022 Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2024 Jürgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:server');
@@ -76,6 +76,23 @@ function pubServer(opts) {
       generator.load(function(err) {
         if (err) return log(err);
         outputAll(output, function(err) {
+          if (err) { log(err); }
+          generator.unload();
+        });
+      });
+
+      return;
+    }
+
+    if (opts.migrate) {
+
+      // only support single output for now
+      let output =  opts.outputs[1];
+      if (!output) return log('No 2nd output (opts.output[1]) configured.');
+
+      generator.load(function(err) {
+        if (err) return log(err);
+        generator.migratePages(output, function(err) {
           if (err) { log(err); }
           generator.unload();
         });

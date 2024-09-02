@@ -2,7 +2,7 @@
 
 /*
  * pub command script
- * Copyright (c) 2015-2022 Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2024 Jürgen Leschner - github.com/jldec - MIT license
  */
 
 var pkg = require('../package.json');
@@ -32,6 +32,7 @@ cli
   .option('-t, --theme <name>',      'theme module-name or dir, repeatable', collect, [])
   .option('-o, --output-path <dir>', 'output dir [./out]')
   .option('-O, --output-only',       'output html, scripts, static files and exit')
+  .option('-g, --migrate',           'migrate markdown to output dir in outputs[1]')
   .option('-r, --root <prefix>',     'generate /prefix urls, "." means path relative')
   .option('-s, --static <dir>',      'static dir, repeatable, supports <dir>,<route>', collectStaticPaths, [])
   .option('-S, --static-only <dir>', 'serve only static files from <dir>', collectStaticPaths, [])
@@ -61,6 +62,7 @@ if (cli.root === '.')              { opts.relPaths = true; }
 else if (cli.root)                 { opts.staticRoot = cli.root; }
 if (cli.outputPath)                { opts.outputs = cli.outputPath; }
 if (cli.outputOnly)                { opts.outputOnly = true; }
+if (cli.migrate)                   { opts.migrate = true; }
 if (cli.static.length)             { opts.staticPaths = cli.static; }
 if (cli.staticOnly.length)         { opts.staticOnly = cli.staticOnly; }
 if (cli.mdFragments)               { opts.fragmentDelim = 'md-headings'; }

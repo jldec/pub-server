@@ -8,7 +8,7 @@
  *   server optional, if not passed, no routes served
  *   serveStatics.outputAll() - copy scripts to outputs[0] (for pub -O)
  *
- * Copyright (c) 2015-2022 Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2024 Jürgen Leschner - github.com/jldec - MIT license
  */
 
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
@@ -17,7 +17,7 @@ var debug = require('debug')('pub:scripts');
 var u = require('pub-util');
 var through = require('through2');
 var fspath = require('path'); // for platform specific path.join
-var uglify = require('uglify-es');
+var uglify = require('uglify-js');
 var asyncbuilder = require('asyncbuilder');
 var browserify = require('browserify');
 
@@ -172,7 +172,7 @@ module.exports = function serveScripts(opts) {
         }
         files.push( { path:script.route, text:str } );
         filemap.push( { path:script.route } );
-        log('output script: %s (%d bytes, %d ms)', script.route, str.length, time());
+        log('output script: %s (%d bytes, %d ms)', script.route, str?.length || 0, time());
         scriptDone(null, script.route);
       });
     });
