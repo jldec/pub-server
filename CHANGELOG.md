@@ -1,3 +1,17 @@
+#### Sep 2, 2024, v2.12.0
+- output yaml frontmatter with pub -g
+- support pnpm
+- support rediss
+
+#### Feb 16, 2023, v2.11.3
+- support source.defaultExt - works for .htm or .html
+
+#### Oct 30, 2022, v2.11.2
+- marked v4.2.12
+
+#### Oct 29, 2022, v2.11.0
+- bump pub-pkg-google-oauth for vuln. alert
+
 #### Jan 23, 2022, v2.10.0
 - upgrade to marked v4.0.10 - see [marked-forms](https://github.com/jldec/marked-forms).
 - fix security warning in pub-src-http (node-fetch)

@@ -7,7 +7,7 @@
  * possibly by directing browser to gatekeeper for auth roundabout
  * TODO: implement a mechanism to force re-authentication (logout gatekeeper)
  *
- * Copyright (c) 2015-2022 Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2024 Jürgen Leschner - github.com/jldec - MIT license
 */
 
 /* global $ */
@@ -48,31 +48,6 @@ module.exports = function initOpts(cb) {
 
       opts.sources.forEach(function(source) {
         opts.source$[source.name] = source;
-
-        // connect to static editor sources: github or dropbox
-        if (opts.staticHost && source.staticSrc) {
-          if (source.gatekeeper) {
-            var append = ab.asyncAppend();
-            debug('authenticating ' + source.gatekeeper);
-            $.getJSON(source.gatekeeper + '/status' + location.search)
-              .fail(function(jqXHR) { append(new Error(jqXHR.responseText)); })
-              .done(function(status) {
-
-                // if not logged in, send browser to gatekeeper for oauth
-                if (!status || !status.access_token) {
-                  location.assign(source.gatekeeper +
-                    '?ref=' + encodeURIComponent(location.href));
-                }
-                // finally we can create the source adapter to save to
-                else {
-                  source.auth = status;
-                  source.src = require(source.staticSrc)(source);
-                }
-                debug(status);
-                append(status);
-              });
-          }
-        }
       });
       ab.complete();
 

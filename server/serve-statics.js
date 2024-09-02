@@ -18,7 +18,7 @@
  *       extend to serve files from remote storage
  *       (supports only local files for now)
  *
- * Copyright (c) 2015-2022 Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2024 Jürgen Leschner - github.com/jldec - MIT license
  */
 
 var debug = require('debug')('pub:static');

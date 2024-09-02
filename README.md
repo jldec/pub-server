@@ -48,7 +48,7 @@ npm install -g pub-server
 - `pub -h` shows the usage info below:
 
 ```
-pub-server v2.11.3
+pub-server v2.12.0
 
 usage: pub [opts] [dir]
 opts:
@@ -57,6 +57,7 @@ opts:
   -t, --theme <name>       theme module-name or dir, repeatable (default: [])
   -o, --output-path <dir>  output dir [./out]
   -O, --output-only        output html, scripts, static files and exit
+  -g, --migrate            migrate markdown to output dir in outputs[1]
   -r, --root <prefix>      generate /prefix urls, "." means path relative
   -s, --static <dir>       static dir, repeatable, supports <dir>,<route> (default: [])
   -S, --static-only <dir>  serve only static files from <dir> (default: [])
