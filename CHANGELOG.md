@@ -1,7 +1,10 @@
 #### Sep 2, 2024, v2.12.0
 - output yaml frontmatter with pub -g
-- support pnpm
-- support rediss
+- support for rediss
+- limited support for pnpm install
+  - to use `pub-pkg-font-open-sans` or `pub-pkg-font-source-sans-pro` with pnpm
+  please include as dependency in package.json (not just in pub-config packages)
+  - there are still issues with resolving nested pub-pkg npm modules.
 
 #### Feb 16, 2023, v2.11.3
 - support source.defaultExt - works for .htm or .html
