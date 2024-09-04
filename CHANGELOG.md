@@ -1,3 +1,6 @@
+#### Sep 4, 2024, v2.13.0
+- rediss and pagination support in pub-src-redis
+
 #### Sep 2, 2024, v2.12.0
 - output yaml frontmatter with pub -g
 - support for rediss
