@@ -198,14 +198,14 @@ function pubServer(opts) {
         server.http.close();
         opts.port = (parseInt(opts.port) || 3001) + 1;
         log('port in use, trying', opts.port);
-        server.http.listen(opts.port);
+        server.http.listen(opts.port, '0.0.0.0');
         tried ++;
       }
     });
 
     require('./server/handle-errors')(server);
 
-    server.http.listen(opts.port);
+    server.http.listen(opts.port, '0.0.0.0');
     log('port', opts.port);
 
     process.on('SIGTERM', function() {
